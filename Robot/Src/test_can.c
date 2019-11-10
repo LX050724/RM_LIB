@@ -57,7 +57,7 @@ HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg)
 	CAN1_Tx.TransmitGlobalTime = DISABLE;
 	
 	HAL_StatusTypeDef err =  HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, (uint32_t *)CAN_TX_MAILBOX0);
-	CAN_ENTER_CRITICAL();
+	CAN_EXIT_CRITICAL();
 	return err;
 }
 

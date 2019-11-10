@@ -24,6 +24,6 @@ typedef struct
 } Chassis_Motor_PID_Expect;
 
 void Chassis_Speed_Ref_Zero(ChassisSpeed_Ref_t* ref);
-void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref); //得到底盘电机所期望的速度
+void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref); //寰楀埌搴曠洏鐢垫満鎵�鏈熸湜鐨勯�熷害
 
 #endif

@@ -1,6 +1,6 @@
 #include "PID.h"
 
-void PID_Control(float current /*Êµ¼ÊÖµ*/, float expected /*ÆÚÍûÖµ*/, PID *motor_type /*²ÎÊý*/)
+void PID_Control(float current /*å®žé™…å€¼*/, float expected /*æœŸæœ›å€¼*/, PID *motor_type /*å‚æ•°*/)
 {
 	motor_type->error_last = motor_type->error_now;
 	motor_type->error_now = expected - current;

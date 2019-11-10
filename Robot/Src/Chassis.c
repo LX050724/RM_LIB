@@ -9,7 +9,7 @@ void Chassis_Speed_Ref_Zero(ChassisSpeed_Ref_t* ref)
 	ref->rotate_ref = 0;
 }
 
-void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref) //得到底盘电机所期望的速度
+void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref) //寰楀埌搴曠洏鐢垫満鎵�鏈熸湜鐨勯�熷害
 {
 	#if Driection == 1
 	motor->Chassis_Motor_PID_Expect_1 = -ref->forward_back_ref -

@@ -6,11 +6,14 @@
 #define CAN2_ENABLE 1
 
 #ifdef __USE_RTOS
-#define CAN_ENTER_CRITICAL(x) taskENTER_CRITICAL((x))
-#define CAN_EXIT_CRITICAL(x) taskEXIT_CRITICAL((x))
+#include "FreeRTOS.h"
+#include "cmsis_os.h"
+
+#define CAN_ENTER_CRITICAL() taskENTER_CRITICAL()
+#define CAN_EXIT_CRITICAL() taskEXIT_CRITICAL()
 #else
-#define CAN_ENTER_CRITICAL(x)
-#define CAN_EXIT_CRITICAL(x)
+#define CAN_ENTER_CRITICAL()
+#define CAN_EXIT_CRITICAL()
 #endif 
 
 typedef enum

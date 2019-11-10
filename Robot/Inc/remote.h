@@ -80,9 +80,9 @@ typedef struct
 	Mouse mouse;
 	Key_U key;
 	Key_U Lastkey;
-} RC_Ctl_t; //¿ØÖÆÊı¾İ½á¹¹Ìå
+} RC_Ctl_t; //æ§åˆ¶æ•°æ®ç»“æ„ä½“
 
-//ÊäÈëÄ£Ê½:Ò£¿ØÆ÷/¼üÅÌÊó±ê/Í£Ö¹ÔËĞĞ
+//è¾“å…¥æ¨¡å¼:é¥æ§å™¨/é”®ç›˜é¼ æ ‡/åœæ­¢è¿è¡Œ
 typedef enum
 {
 	REMOTE_INPUT = 1,

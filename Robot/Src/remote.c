@@ -2,7 +2,7 @@
 
 RC_Ctl_t RC_CtrlData = {.rc = {1024,1024,1024,1024,2,1}};												 //remote control data
 
-//Ò£¿ØÆ÷¿ØÖÆÄ£Ê½´¦Àí
+//é¥æ§å™¨æ§åˆ¶æ¨¡å¼å¤„ç†
 __weak void RemoteControlProcess(Remote *rc)
 {
 	UNUSED(rc);
@@ -63,14 +63,14 @@ void Remote_Rx(unsigned char *RxMsg)
 	{
 		case REMOTE_INPUT:
 		{
-			//Ò£¿ØÆ÷¿ØÖÆÄ£Ê½
+			//é¥æ§å™¨æ§åˆ¶æ¨¡å¼
 			RemoteControlProcess(&(RC_CtrlData.rc));
 		}
 		break;
 
 		case KEY_MOUSE_INPUT:
 		{
-			//¼üÊó¿ØÖÆÄ£Ê½
+			//é”®é¼ æ§åˆ¶æ¨¡å¼
 			MouseKeyControlProcess(&RC_CtrlData.mouse,RC_CtrlData.key.D,RC_CtrlData.Lastkey.D);
 		}
 		break;
