@@ -12,11 +12,23 @@ typedef struct PID_PARAMETER
 	float Kp;
 	float Ki;
 	float Kd;
+	float limit; //积分限幅
 	float error_now;
 	float error_last;
 	float error_inter;
 	float pid_out;
 } PID;
+
+typedef struct PID_PARAMETER_SMIS
+{
+	float Kp;
+	float Ki;
+	float Kd;
+	float limit; //积分限幅
+	float error_now;
+	float error_inter;
+	float pid_out;
+} PID_Smis;
 
 typedef struct PID_INCREASE
 {
@@ -43,7 +55,8 @@ typedef struct
 } Diff;
 
 void PID_Control(float current, float expected, PID *motor_type);
-float PID_Increment(float current,float expect,PID_ADD *parameter);
+void PID_Control_Smis(float current, float expected, PID *motor_type, float speed);
+float PID_Increment(float current, float expect, PID_ADD *parameter);
 float PID_diff_convert(float init_data, Diff *type);
 
 #endif

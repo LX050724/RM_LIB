@@ -13,7 +13,19 @@ typedef struct
 	int16_t r;
 	int32_t Angle;
 	float Angle_DEG;
-}RM3508_TypeDef,GM6020_TypeDef;
+}RM3508_TypeDef;
+
+typedef struct
+{
+	uint16_t MchanicalAngle;
+	int16_t Speed;
+	int16_t TorqueCurrent;
+	uint8_t temp;
+	uint16_t LsatAngle;
+	int16_t r;
+	int32_t Angle;
+	float Angle_DEG;
+}GM6020_TypeDef;
 
 typedef struct
 {

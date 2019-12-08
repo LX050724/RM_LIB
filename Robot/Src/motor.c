@@ -20,13 +20,13 @@ void RM6623_Receive(RM6623_TypeDef* Dst,uint8_t* Data)
 void RM3510_Receive(RM3510_TypeDef* Dst,uint8_t* Data)
 {
 	Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
-	Dst->Speed = (uint16_t)(Data[2] << 8 | Data[3]);
+	Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
 }
 
 void RM3508_Receive(RM3508_TypeDef* Dst,uint8_t* Data)
 {
 	Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
-	Dst->Speed = (uint16_t)(Data[2] << 8 | Data[3]);
+	Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
 	Dst->TorqueCurrent = (uint16_t)(Data[4] << 8 | Data[5]);
 	Dst->temp = Data[6];
 	
@@ -50,7 +50,7 @@ void GM3510_Receive(GM3510_TypeDef* Dst,uint8_t* Data)
 void GM6020_Receive(GM6020_TypeDef* Dst,uint8_t* Data)
 {
 	Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
-	Dst->Speed = (uint16_t)(Data[2] << 8 | Data[3]);
+	Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
 	Dst->TorqueCurrent = (uint16_t)(Data[4] << 8 | Data[5]);
 	Dst->temp = Data[6];
 	
@@ -67,7 +67,7 @@ void GM6020_Receive(GM6020_TypeDef* Dst,uint8_t* Data)
 void M2006_Receive(M2006_TypeDef* Dst,uint8_t* Data)
 {
 	Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
-	Dst->Speed = (uint16_t)(Data[2] << 8 | Data[3]);
+	Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
 	
 	int16_t diff = Dst->MchanicalAngle - Dst->LsatAngle;
 	

@@ -2,6 +2,7 @@
 #define _CHASSIS_H_
 #include "stm32f4xx_hal.h"
 
+//底盘速度矢量
 typedef struct
 {
      int16_t forward_back_ref;
@@ -9,12 +10,14 @@ typedef struct
      int16_t rotate_ref;
 } ChassisSpeed_Ref_t;
 
+//云台角度
 typedef struct
 {
      float Pitch;
      float Yaw;
 } PTZAngle_Ref_t;
 
+//轮组速度
 typedef struct
 {
      int16_t Chassis_Motor_PID_Expect_1;
@@ -23,7 +26,7 @@ typedef struct
      int16_t Chassis_Motor_PID_Expect_4;
 } Chassis_Motor_PID_Expect;
 
-void Chassis_Speed_Ref_Zero(ChassisSpeed_Ref_t* ref);
+void Chassis_Speed_Ref_Zero(ChassisSpeed_Ref_t* ref);//速度清零
 void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref); //得到底盘电机所期望的速度
 
 #endif
