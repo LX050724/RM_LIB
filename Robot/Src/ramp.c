@@ -1,7 +1,6 @@
 #include "ramp.h"
-#include "tim.h"
 
-__weak inline uint32_t Get_TimerTick()//使用前必须重写该函数，(0.1MHz)
+__weak uint32_t Get_TimerTick()//使用前必须重写该函数，(0.1MHz),推荐使用inline修饰内联函数
 {
 	return 0;
 }

@@ -55,7 +55,7 @@ typedef struct
 } Diff;
 
 void PID_Control(float current, float expected, PID *motor_type);
-void PID_Control_Smis(float current, float expected, PID *motor_type, float speed);
+void PID_Control_Smis(float current, float expected, PID_Smis *motor_type, float speed);
 float PID_Increment(float current, float expect, PID_ADD *parameter);
 float PID_diff_convert(float init_data, Diff *type);
 

@@ -1,6 +1,6 @@
 #include <WatchDog.h>
 
-extern uint32_t uwTick;
+extern volatile uint32_t uwTick;
 extern HAL_TickFreqTypeDef uwTickFreq;
 
 WatchDogp List[10];
