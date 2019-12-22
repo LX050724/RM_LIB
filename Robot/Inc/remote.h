@@ -1,11 +1,7 @@
 #ifndef __remote_H
 #define __remote_H
 
-#ifdef __USE_RTOS
-#include "freertos_task.h"
-#else
-#include <user_main.h>
-#endif
+#include "stm32f4xx.h"
 
 #define RC_FRAME_LENGTH 18u
 #define REMOTE_CONTROLLER_STICK_OFFSET 1024
