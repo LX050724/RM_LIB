@@ -92,7 +92,9 @@ HAL_StatusTypeDef MotorSend(uint8_t can,uint32_t STD_ID,int16_t* Data)
 	temp[7] = (uint8_t)(Data[3] & 0xff);
 	if(can == 1)
 		return CAN1_Send_Msg(STD_ID,temp);
+#if CAN2_ENABLE == 1
 	else if (can == 2)
 		return CAN2_Send_Msg(STD_ID,temp);
+#endif
 	else return HAL_ERROR;
 }

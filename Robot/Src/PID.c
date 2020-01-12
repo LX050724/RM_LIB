@@ -44,6 +44,7 @@ float PID_diff_convert(float init_data, Diff *type)
 void PID_Control_Smis(float current, float expected, PID_Smis *motor_type, float speed)
 {
 	motor_type->error_now = expected - current;
+	motor_type->error_inter += motor_type->error_now;
 
 	if (motor_type->error_inter > motor_type->limit)
 		motor_type->error_inter = motor_type->limit;
