@@ -1,17 +1,17 @@
 #include "PID.h"
 
-void PID_Control(float current /*实际值*/, float expected /*期望值*/, PID *motor_type /*参数*/)
+void PID_Control(float current /*实际值*/, float expected /*期望值*/, PID *data /*参数*/)
 {
-	motor_type->error_last = motor_type->error_now;
-	motor_type->error_now = expected - current;
-	motor_type->error_inter += motor_type->error_now;
+	data->error_last = data->error_now;
+	data->error_now = expected - current;
+	data->error_inter += data->error_now;
 
-	if (motor_type->error_inter > motor_type->limit)
-		motor_type->error_inter = motor_type->limit;
-	if (motor_type->error_inter < -motor_type->limit)
-		motor_type->error_inter = -motor_type->limit;
-	motor_type->pid_out = motor_type->Kp * motor_type->error_now + motor_type->Ki * motor_type->error_inter +
-						  motor_type->Kd * (motor_type->error_now - motor_type->error_last);
+	if (data->error_inter > data->limit)
+		data->error_inter = data->limit;
+	if (data->error_inter < -data->limit)
+		data->error_inter = -data->limit;
+	data->pid_out = data->Kp * data->error_now + data->Ki * data->error_inter +
+						  data->Kd * (data->error_now - data->error_last);
 }
 
 float PID_Increment(float current, float expect, PID_ADD *parameter)
@@ -27,30 +27,17 @@ float PID_Increment(float current, float expect, PID_ADD *parameter)
 	return parameter->increament;
 }
 
-float PID_diff_convert(float init_data, Diff *type)
-{
-	type->x_now = init_data;
-
-	type->y_now = (int)(type->NUM[0] * type->x_now + type->NUM[1] * type->x_last + type->NUM[2] * type->x_next - type->DEN[1] * type->y_last - type->DEN[2] * type->y_next);
-
-	type->y_next = type->y_last;
-	type->y_last = type->y_now;
-	type->x_next = type->x_last;
-	type->x_last = type->x_now;
-	return type->y_now;
-}
-
 /***********************    带史密斯预估器的位置式PID↓   ************************/
-void PID_Control_Smis(float current, float expected, PID_Smis *motor_type, float speed)
+void PID_Control_Smis(float current, float expected, PID_Smis *data, float speed)
 {
-	motor_type->error_now = expected - current;
-	motor_type->error_inter += motor_type->error_now;
+	data->error_now = expected - current;
+	data->error_inter += data->error_now;
 
-	if (motor_type->error_inter > motor_type->limit)
-		motor_type->error_inter = motor_type->limit;
-	if (motor_type->error_inter < -motor_type->limit)
-		motor_type->error_inter = -motor_type->limit;
+	if (data->error_inter > data->limit)
+		data->error_inter = data->limit;
+	if (data->error_inter < -data->limit)
+		data->error_inter = -data->limit;
 
-	motor_type->pid_out = motor_type->Kp * motor_type->error_now + motor_type->Ki * motor_type->error_inter +
-						  motor_type->Kd * speed;
+	data->pid_out = data->Kp * data->error_now + data->Ki * data->error_inter +
+						  data->Kd * speed;
 }

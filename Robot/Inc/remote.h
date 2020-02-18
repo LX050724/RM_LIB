@@ -1,28 +1,16 @@
 #ifndef __remote_H
 #define __remote_H
 
-#include "stm32f4xx.h"
+#if defined(STM32F407xx) || defined(STM32F405xx) || defined(STM32F427xx)
+	#include <stm32f4xx.h>
+#elif defined(STM32F303xx) || defined(STM32F334xx)
+	#include <stm32f3xx.h>
+#elif defined(STM32F103xx)
+	#include <stm32f1xx.h>
+#endif
 
 #define RC_FRAME_LENGTH 18u
 #define REMOTE_CONTROLLER_STICK_OFFSET 1024
-
-#define Key_B   	0x8000
-#define Key_V			0x4000
-#define Key_C			0x2000
-#define Key_X			0x1000
-#define Key_Z			0x0800
-#define Key_G			0x0400
-#define Key_F			0x0200
-#define Key_R			0x0100
-#define Key_E			0x0080
-#define Key_Q			0x0040
-#define Key_Ctrl	0x0020
-#define Key_Shift	0x0010
-#define Key_D			0x0008
-#define Key_A			0x0004
-#define Key_S			0x0002
-#define Key_W			0x0001
-
 
 typedef __packed struct
 {
@@ -89,12 +77,10 @@ typedef enum
 void Remote_Rx(unsigned char *RxMsg);
 void Remote_Zero(void);
 
-extern uint8_t Twist;
-
 extern RC_Ctl_t RC_CtrlData;
 
-__weak void RemoteControlProcess(Remote *rc);
-__weak void MouseKeyControlProcess(Mouse *mouse,Key_t key,Key_t Lastkey);
-__weak void STOPControlProcess(void);
+void RemoteControlProcess(Remote *rc);
+void MouseKeyControlProcess(Mouse *mouse,Key_t key,Key_t Lastkey);
+void STOPControlProcess(void);
 
 #endif

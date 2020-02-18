@@ -26,9 +26,9 @@ typedef struct
   float Q;
   float R;
   float H;
-} kalman;
+} kalman_filter_t;
 
-void kalmanCreate(kalman *p, float T_Q, float T_R);
-float KalmanFilter(kalman *p, float dat);
+void kalman_Init(kalman_filter_t *p, float T_Q, float T_R);
+float Kalman_Filter(kalman_filter_t *p, float dat);
 
 #endif

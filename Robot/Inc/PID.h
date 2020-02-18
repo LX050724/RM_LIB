@@ -41,22 +41,8 @@ typedef struct PID_INCREASE
 	float increament;
 } PID_ADD;
 
-typedef struct
-{
-	float NUM[3];
-	float DEN[3];
-	float x_now;
-	float x_last;
-	float x_next;
-	float y_now;
-	float y_last;
-	float y_next;
-
-} Diff;
-
-void PID_Control(float current, float expected, PID *motor_type);
-void PID_Control_Smis(float current, float expected, PID_Smis *motor_type, float speed);
+void PID_Control(float current, float expected, PID *data);
+void PID_Control_Smis(float current, float expected, PID_Smis *data, float speed);
 float PID_Increment(float current, float expect, PID_ADD *parameter);
-float PID_diff_convert(float init_data, Diff *type);
 
 #endif

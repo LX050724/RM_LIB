@@ -25,17 +25,16 @@
 #include "kalman.h"
 
 /**
-  * @name   kalmanCreate
-  * @brief  创建一个卡尔曼滤波器
+  * @name   kalman_Init
+  * @brief  初始化一个卡尔曼滤波器
   * @param  p:  滤波器
   *         T_Q:系统噪声协方差
   *         T_R:测量噪声协方差
   *         
   * @retval none
   */
-void kalmanCreate(kalman *p, float T_Q, float T_R)
+void kalman_Init(kalman_filter_t *p, float T_Q, float T_R)
 {
-  //kalman* p = ( kalman*)malloc(sizeof( kalman));
   p->X_last = (float)0;
   p->P_last = 0;
   p->Q = T_Q;
@@ -43,18 +42,17 @@ void kalmanCreate(kalman *p, float T_Q, float T_R)
   p->A = 1;
   p->H = 1;
   p->X_mid = p->X_last;
-  //return p;
 }
 
 /**
-  * @name   KalmanFilter
+  * @name   Kalman_Filter
   * @brief  卡尔曼滤波器
   * @param  p:  滤波器
   *         dat:待滤波数据
   * @retval 滤波后的数据
   */
 
-float KalmanFilter(kalman *p, float dat)
+float Kalman_Filter(kalman_filter_t *p, float dat)
 {
   p->X_mid = p->A * p->X_last;                    //x(k|k-1) = AX(k-1|k-1)+BU(k)
   p->P_mid = p->A * p->P_last + p->Q;             //p(k|k-1) = Ap(k-1|k-1)A'+Q

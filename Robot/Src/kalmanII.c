@@ -1,10 +1,7 @@
-#include "stm32f4xx_hal.h"
-#include "filter.h"
-
-#ifdef ARM_MATH_CM4
+#include "kalmanII.h"
 
 #include "arm_math.h"
-//kalman_filter_init_t yaw_kalman_filter_data = {
+//kalman_filter_t yaw_kalman_filter_data = {
 //    .P_data = {2, 0, 0, 2},     // 协方差矩阵
 //    .A_data = {1, 0.001, 0, 1}, // 预测矩阵 （采样时间）
 //    .H_data = {2, 0, 0, 1},     // 传感器测量数据矩阵
@@ -20,7 +17,7 @@
 //		.E_data = {1,0,0,1}            // 单位矩阵
 //};
 
-void kalman_filter_init(kalman_filter_init_t *I)
+void kalmanInitII(kalman_filterII_t *I)
 {
   mat_init(&I->kalman.xhat, 2, 1, (float *)I->xhat_data); //  前行后列
   mat_init(&I->kalman.xhatminus, 2, 1, (float *)I->xhatminus_data);
@@ -39,9 +36,9 @@ void kalman_filter_init(kalman_filter_init_t *I)
   mat_init(&I->kalman.E, 2, 2, (float *)I->E_data);
 }
 
-void kalman_filter_calc(kalman_filter_init_t *I, float signal1, float signal2)
+float* KalmanFilterII(kalman_filterII_t *I, float signal1, float signal2)
 {
-	kalman_filter_t *F = &I->kalman;
+	struct kalman_filtercore *F = &I->kalman;
 	
   float TEMP_data[4] = {0, 0, 0, 0};
   float TEMP_data21[2] = {0, 0};
@@ -83,42 +80,6 @@ void kalman_filter_calc(kalman_filter_init_t *I, float signal1, float signal2)
 
   F->filtered_value[0] = F->xhat.pData[0];
   F->filtered_value[1] = F->xhat.pData[1];
+  return F->filtered_value;
 }
 
-/*********解算目标速度值*********/
-float speed_threshold = 10.0f; // 速度阈值
-float target_speed_calc(speed_calc_data_t *S, float time, float position)
-{
-  S->delay_cnt++;
-
-  if (time != S->last_time)
-  {
-    S->speed = (position - S->last_position) / (time - S->last_time) * 1000;
-#if 1
-    if ((S->speed - S->processed_speed) < -speed_threshold)
-    {
-      S->processed_speed = S->processed_speed - speed_threshold;
-    }
-    else if ((S->speed - S->processed_speed) > speed_threshold)
-    {
-      S->processed_speed = S->processed_speed + speed_threshold;
-    }
-    else
-#endif
-      S->processed_speed = S->speed;
-
-    S->last_time = time;
-    S->last_position = position;
-    S->last_speed = S->speed;
-    S->delay_cnt = 0;
-  }
-
-  if (S->delay_cnt > 200) // delay 200ms speed = 0
-  {
-    S->processed_speed = 0;
-  }
-
-  return S->processed_speed;
-}
-
-#endif

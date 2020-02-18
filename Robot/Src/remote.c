@@ -58,27 +58,19 @@ void Remote_Rx(unsigned char *RxMsg)
 
 	RC_CtrlData.key.S = ((int16_t)RxMsg[14]|(int16_t)RxMsg[15]<<8);
 
-
 	switch (RC_CtrlData.rc.s2)
 	{
 		case REMOTE_INPUT:
-		{
 			//遥控器控制模式
 			RemoteControlProcess(&(RC_CtrlData.rc));
-		}
-		break;
-
+			break;
 		case KEY_MOUSE_INPUT:
-		{
 			//键鼠控制模式
 			MouseKeyControlProcess(&RC_CtrlData.mouse,RC_CtrlData.key.D,RC_CtrlData.Lastkey.D);
-		}
-		break;
+			break;		
 		case STOP:
-		{
 			STOPControlProcess();
-		}
-		break;
+			break;
 	}
 	RC_CtrlData.mouse.last_press_l = RC_CtrlData.mouse.press_l;
 	RC_CtrlData.mouse.last_press_r = RC_CtrlData.mouse.press_r;

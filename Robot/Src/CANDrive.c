@@ -1,14 +1,11 @@
-                                     /*以下代码是can的滤波器*/
-#include "test_can.h"
+#include "CANDrive.h"
 #include "can.h"
-#ifdef HAL_CAN_MODULE_ENABLED
-
 
 CAN_RxHeaderTypeDef CAN1_Rx;
 CAN_TxHeaderTypeDef CAN1_Tx;
 uint8_t CAN1_buff[8];
 
-#if CAN2_ENABLE==1
+#ifdef CAN2_SUPPORT
 CAN_RxHeaderTypeDef CAN2_Rx;
 CAN_TxHeaderTypeDef CAN2_Tx;
 uint8_t CAN2_buff[8];
@@ -35,7 +32,7 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
 		canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;// CAN_FilterFIFO0;
 
   }
-#if CAN2_ENABLE==1
+#ifdef CAN2_SUPPORT
   if(hcan->Instance == CAN2)
   {
     canfilter.FilterBank = 14;
@@ -66,7 +63,7 @@ inline HAL_StatusTypeDef CAN1_Receive_Msg(uint8_t *buf)
 	return HAL_CAN_GetRxMessage(&hcan1, CAN_FilterFIFO0, &CAN1_Rx, buf);
 }
 
-#if CAN2_ENABLE==1
+#ifdef CAN2_SUPPORT
 HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg)
 {
 	CAN_ENTER_CRITICAL();
@@ -84,6 +81,5 @@ inline HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf)
 {
 	return HAL_CAN_GetRxMessage(&hcan2, CAN_FilterFIFO1, &CAN2_Rx, buf);
 }
-#endif
 
 #endif

@@ -1,6 +1,13 @@
 #ifndef _WATCH_DOG_H_
 #define _WATCH_DOG_H_
-#include <stm32f4xx.h>
+
+#if defined(STM32F407xx) || defined(STM32F405xx) || defined(STM32F427xx)
+	#include <stm32f4xx.h>
+#elif defined(STM32F303xx) || defined(STM32F334xx)
+	#include <stm32f3xx.h>
+#elif defined(STM32F103xx)
+	#include <stm32f1xx.h>
+#endif
 
 typedef struct WatchDog
 {
