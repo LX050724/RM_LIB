@@ -4,33 +4,9 @@
 
 ## 配置方法
 
-在RM_LIB_conf.h中配置要启用的模块以及配置模块的参数  
-__USE_RTOS是是否使用FreeRTOS的标志决定了CAN是否使用临界区保护
-
->`#define __USE_RTOS` 是否使用FreeRTOS,未使用则注释掉
->
->+ 相关模块:CAN模块
-
->各个模块是否使能,未使用则注释掉
->```
->#define RMLIB_CHASSIS_MODULE_ENABLED
->#define RMLIB_KALMANII_MODULE_ENABLED
->#define RMLIB_KALMAN_MODULE_ENABLED
->#define RMLIB_MOTOR_MODULE_ENABLED
->#define RMLIB_PID_MODULE_ENABLED
->#define RMLIB_RAMP_MODULE_ENABLED
->#define RMLIB_REMOTE_MODULE_ENABLED
->#define RMLIB_CANDRIVE_MODULE_ENABLED
->#define RMLIB_WATCHDOG_MODULE_ENABLED
->```
-
->`#define CAN2_SUPPORT` CAN2支持
-
->`#define WatchDogENABLE` 启动看门狗
->
->+ 注释此宏定义不会影响编译,只是看门狗不运行
-
->`#define WatchDoglength 10` 看门狗最大数目
+>+ 添加全局宏定义__USE_RTOS决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护
+>+ 添加全局宏定义WatchDoglength，并赋值看门狗最大数量启用看门狗
+>+ 添加全局宏定义CAN2_SUPPORT，启用CAN2支持
 
 ## 使用方法
 

@@ -2,12 +2,14 @@
 #define _MOTOR_H_
 
 #if defined(STM32F407xx) || defined(STM32F405xx) || defined(STM32F427xx)
-	#include <stm32f4xx.h>
+    #include <stm32f4xx.h>
 #elif defined(STM32F303xx) || defined(STM32F334xx)
-	#include <stm32f3xx.h>
+    #include <stm32f3xx.h>
 #elif defined(STM32F103xx)
-	#include <stm32f1xx.h>
+    #include <stm32f1xx.h>
 #endif
+
+#include "CANDrive.h"
 
 #define RM3508_LIMIT 16384
 #define GM6020_LIMIT 30000
@@ -18,69 +20,69 @@
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t Speed;
-	int16_t TorqueCurrent;
-	uint8_t temp;
-	float Power;
-	uint16_t LsatAngle;
-	int16_t r;
-	int32_t Angle;
-	float Angle_DEG;
-	struct PowerCOF_s{
-		float ss;
-		float sc;
-		float cc;
-	}PowerCOF;
+    uint16_t MchanicalAngle;
+    int16_t Speed;
+    int16_t TorqueCurrent;
+    uint8_t temp;
+    float Power;
+    uint16_t LsatAngle;
+    int16_t r;
+    int32_t Angle;
+    float Angle_DEG;
+    struct PowerCOF_s{
+        float ss;
+        float sc;
+        float cc;
+    }PowerCOF;
 }RM3508_TypeDef;
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t Speed;
-	int16_t TorqueCurrent;
-	uint8_t temp;
-	uint16_t LsatAngle;
-	int16_t r;
-	int32_t Angle;
-	float Angle_DEG;
+    uint16_t MchanicalAngle;
+    int16_t Speed;
+    int16_t TorqueCurrent;
+    uint8_t temp;
+    uint16_t LsatAngle;
+    int16_t r;
+    int32_t Angle;
+    float Angle_DEG;
 }GM6020_TypeDef;
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t Speed;
+    uint16_t MchanicalAngle;
+    int16_t Speed;
 }RM3510_TypeDef;
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t OutputTorque;
-	uint16_t LsatAngle;
-	int16_t r;
-	int32_t Angle;
-	float Angle_DEG;
+    uint16_t MchanicalAngle;
+    int16_t OutputTorque;
+    uint16_t LsatAngle;
+    int16_t r;
+    int32_t Angle;
+    float Angle_DEG;
 }GM3510_TypeDef;
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t Speed;
-	uint16_t LsatAngle;
-	int16_t r;
-	int32_t Angle;
-	float Angle_DEG;
+    uint16_t MchanicalAngle;
+    int16_t Speed;
+    uint16_t LsatAngle;
+    int16_t r;
+    int32_t Angle;
+    float Angle_DEG;
 }M2006_TypeDef;
 
 typedef struct
 {
-	uint16_t MchanicalAngle;
-	int16_t TorqueCurrent;
-	int16_t SetTorqueCurrent;
-	uint16_t LsatAngle;
-	int16_t r;
-	int32_t Angle;
-	float Angle_DEG;
+    uint16_t MchanicalAngle;
+    int16_t TorqueCurrent;
+    int16_t SetTorqueCurrent;
+    uint16_t LsatAngle;
+    int16_t r;
+    int32_t Angle;
+    float Angle_DEG;
 }RM6623_TypeDef;
 
 
