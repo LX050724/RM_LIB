@@ -1,22 +1,31 @@
 #include "ramp.h"
 
-__weak uint32_t Get_TimerTick()//使用前必须重写该函数，(0.1MHz),推荐使用inline修饰内联函数
-{
-    return 0;
+/**
+ * @brief 斜坡函数,可重写为自定义时钟源,默认SysTick
+ * @return 时钟计数值
+ */
+__weak uint32_t Get_TimerTick() {
+    return HAL_GetTick();
 }
 
-inline float Slope(Ramp_Typedef* Ramp) //斜坡函数，让缓慢增速
-{
-    if(!Ramp->flag)
-    {
+/**
+ * @brief 斜坡函数
+ * @param Ramp 斜坡函数结构体指针
+ * @return 0-1的随时间匀速上升的变量
+ */
+float Slope(Ramp_Typedef *Ramp) {
+    if (!Ramp->flag) {
         Ramp->StartTick = Get_TimerTick();
         Ramp->flag = 1;
     }
-    if(Get_TimerTick() > (Ramp->StartTick + Ramp->RampTime))return 1.0f;
-    return ((Get_TimerTick() - Ramp->StartTick) / (float)Ramp->RampTime);
+    if (Get_TimerTick() > (Ramp->StartTick + Ramp->RampTime))return 1.0f;
+    return ((Get_TimerTick() - Ramp->StartTick) / (float) Ramp->RampTime);
 }
 
-inline void ResetSlope(Ramp_Typedef* Ramp) //释放只是为了让下次在进斜坡
-{
+/**
+ * @brief 重置斜坡
+ * @param Ramp 斜坡函数结构体指针
+ */
+void ResetSlope(Ramp_Typedef *Ramp) {
     Ramp->flag = 0;
 }

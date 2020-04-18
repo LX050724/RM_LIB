@@ -18,7 +18,7 @@
 #define M2006_LIMIT  10000
 #define RM6623_LIMIT 32767 //找不到了
 
-typedef struct
+typedef struct __RM3508_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t Speed;
@@ -36,7 +36,7 @@ typedef struct
     }PowerCOF;
 }RM3508_TypeDef;
 
-typedef struct
+typedef struct __GM6020_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t Speed;
@@ -48,13 +48,13 @@ typedef struct
     float Angle_DEG;
 }GM6020_TypeDef;
 
-typedef struct
+typedef struct __RM3510_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t Speed;
 }RM3510_TypeDef;
 
-typedef struct
+typedef struct __GM3510_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t OutputTorque;
@@ -64,7 +64,7 @@ typedef struct
     float Angle_DEG;
 }GM3510_TypeDef;
 
-typedef struct
+typedef struct __M2006_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t Speed;
@@ -74,7 +74,7 @@ typedef struct
     float Angle_DEG;
 }M2006_TypeDef;
 
-typedef struct
+typedef struct __RM6623_TypeDef
 {
     uint16_t MchanicalAngle;
     int16_t TorqueCurrent;

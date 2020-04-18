@@ -17,35 +17,44 @@
 //        .E_data = {1,0,0,1}            // 单位矩阵
 //};
 
-void kalmanInitII(kalman_filterII_t *I)
-{
-    mat_init(&I->kalman.xhat, 2, 1, (float *)I->xhat_data); //  前行后列
-    mat_init(&I->kalman.xhatminus, 2, 1, (float *)I->xhatminus_data);
-    mat_init(&I->kalman.z, 2, 1, (float *)I->z_data);
-    mat_init(&I->kalman.A, 2, 2, (float *)I->A_data);
-    mat_init(&I->kalman.H, 2, 2, (float *)I->H_data);
-    mat_init(&I->kalman.AT, 2, 2, (float *)I->AT_data);
+/**
+ * @brief 初始化二阶卡尔曼滤波器
+ * @param 二阶卡尔曼滤波器
+ */
+void kalmanInitII(kalman_filterII_t *I) {
+    mat_init(&I->kalman.xhat, 2, 1, (float *) I->xhat_data); //  前行后列
+    mat_init(&I->kalman.xhatminus, 2, 1, (float *) I->xhatminus_data);
+    mat_init(&I->kalman.z, 2, 1, (float *) I->z_data);
+    mat_init(&I->kalman.A, 2, 2, (float *) I->A_data);
+    mat_init(&I->kalman.H, 2, 2, (float *) I->H_data);
+    mat_init(&I->kalman.AT, 2, 2, (float *) I->AT_data);
     mat_trans(&I->kalman.A, &I->kalman.AT);
-    mat_init(&I->kalman.Q, 2, 2, (float *)I->Q_data);
-    mat_init(&I->kalman.R, 2, 2, (float *)I->R_data);
-    mat_init(&I->kalman.P, 2, 2, (float *)I->P_data);
-    mat_init(&I->kalman.Pminus, 2, 2, (float *)I->Pminus_data);
-    mat_init(&I->kalman.K, 2, 2, (float *)I->K_data);
-    mat_init(&I->kalman.HT, 2, 2, (float *)I->HT_data);
+    mat_init(&I->kalman.Q, 2, 2, (float *) I->Q_data);
+    mat_init(&I->kalman.R, 2, 2, (float *) I->R_data);
+    mat_init(&I->kalman.P, 2, 2, (float *) I->P_data);
+    mat_init(&I->kalman.Pminus, 2, 2, (float *) I->Pminus_data);
+    mat_init(&I->kalman.K, 2, 2, (float *) I->K_data);
+    mat_init(&I->kalman.HT, 2, 2, (float *) I->HT_data);
     mat_trans(&I->kalman.H, &I->kalman.HT);
-    mat_init(&I->kalman.E, 2, 2, (float *)I->E_data);
+    mat_init(&I->kalman.E, 2, 2, (float *) I->E_data);
 }
 
-float* KalmanFilterII(kalman_filterII_t *I, float signal1, float signal2)
-{
+/**
+ * @brief 滤波器
+ * @param I 二阶卡尔曼滤波器
+ * @param signal1 信号1
+ * @param signal2 信号2
+ * @return 滤波后的信号float数组,长度为2
+ */
+float *KalmanFilterII(kalman_filterII_t *I, float signal1, float signal2) {
     struct kalman_filtercore *F = &I->kalman;
 
     float TEMP_data[4] = {0, 0, 0, 0};
     float TEMP_data21[2] = {0, 0};
     mat TEMP, TEMP21;
 
-    mat_init(&TEMP, 2, 2, (float *)TEMP_data);
-    mat_init(&TEMP21, 2, 1, (float *)TEMP_data21);
+    mat_init(&TEMP, 2, 2, (float *) TEMP_data);
+    mat_init(&TEMP21, 2, 1, (float *) TEMP_data21);
 
     F->z.pData[0] = signal1; // 传感器读数位置值
     F->z.pData[1] = signal2; // 传感器读数速度值

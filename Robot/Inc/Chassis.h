@@ -9,23 +9,29 @@
     #include <stm32f1xx.h>
 #endif
 
-//底盘速度矢量
-typedef struct
+/**
+ * @brief 矢量速度结构体
+ */
+typedef struct __ChassisSpeed_Ref_t
 {
      int16_t forward_back_ref;
      int16_t left_right_ref;
      int16_t rotate_ref;
 } ChassisSpeed_Ref_t;
 
-//云台角度
-typedef struct
+/**
+ * @brief 云台角度结构体
+ */
+typedef struct __PTZAngle_Ref_t
 {
      float Pitch;
      float Yaw;
 } PTZAngle_Ref_t;
 
-//轮组速度
-typedef struct
+/**
+ * @brief 轮组速度结构体
+ */
+typedef struct __Chassis_Motor_PID_Expect
 {
      int16_t Chassis_Motor_PID_Expect_1;
      int16_t Chassis_Motor_PID_Expect_2;

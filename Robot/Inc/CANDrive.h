@@ -27,7 +27,10 @@
     #define CAN_EXIT_CRITICAL()
 #endif 
 
-typedef enum
+/**
+ * @brief can枚举
+ */
+typedef enum __can_num_e
 {
     can1 = 1,
     can2 = 2,

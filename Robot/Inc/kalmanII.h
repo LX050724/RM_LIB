@@ -19,7 +19,10 @@
 #define mat_trans arm_mat_trans_f32
 #define mat_inv arm_mat_inverse_f32
 
-typedef struct
+/**
+ * @brief 二阶卡尔曼滤波器
+ */
+typedef struct __kalman_filterII_t
 {
     float raw_value;
     float filtered_value[2];
@@ -32,6 +35,9 @@ typedef struct
     float R_data[4];
     float E_data[4];
 
+    /**
+     * @brief 滤波器核心
+     */
     struct kalman_filtercore{
         float raw_value;
         float filtered_value[2];

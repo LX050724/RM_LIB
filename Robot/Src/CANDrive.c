@@ -13,8 +13,11 @@ CAN_TxHeaderTypeDef CAN2_Tx;
 uint8_t CAN2_buff[8];
 #endif
 
-void CanFilter_Init(CAN_HandleTypeDef* hcan)
-{
+/**
+ * @brief  按照通常设置初始化CAN滤波器
+ * @param hcan CAN handle Structure definition
+ */
+void CanFilter_Init(CAN_HandleTypeDef *hcan) {
     CAN_FilterTypeDef canfilter;
 
     canfilter.FilterMode = CAN_FILTERMODE_IDMASK;
@@ -24,16 +27,14 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
     canfilter.FilterIdLow = 0x0000;
     canfilter.FilterMaskIdHigh = 0x0000;
     canfilter.FilterMaskIdLow = 0x0000;
-    canfilter.SlaveStartFilterBank=14;                      //从can的过滤器起始编号 只有当设置两个can时 该参数才有意义
+    canfilter.SlaveStartFilterBank = 14;                      //从can的过滤器起始编号 只有当设置两个can时 该参数才有意义
     /*can1和CAN2使用不同的滤波器*/
-    if(hcan->Instance == CAN1)
-    {
+    if (hcan->Instance == CAN1) {
         canfilter.FilterBank = 0;                           //主can的过滤器编号
         canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;  // CAN_FilterFIFO0;
     }
 #ifdef CAN2_SUPPORT
-    if(hcan->Instance == CAN2)
-    {
+    if (hcan->Instance == CAN2) {
         canfilter.FilterBank = 14;
         canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO1;  // CAN_FilterFIFO0;
     }
@@ -42,41 +43,60 @@ void CanFilter_Init(CAN_HandleTypeDef* hcan)
     HAL_CAN_ConfigFilter(hcan, &canfilter);
 }
 
-HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg)
-{
+/**
+ * @brief CAN1发送标准帧数据
+ * @param StdId 标准帧ID
+ * @param msg 数据数组,长度为8
+ * @return HAL Status structures definition
+ */
+HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
     CAN_ENTER_CRITICAL();
     CAN1_Tx.StdId = StdId;      //标准标识符
     CAN1_Tx.IDE = CAN_ID_STD;   //使用标准帧
     CAN1_Tx.RTR = CAN_RTR_DATA; //数据帧
     CAN1_Tx.DLC = 8;
     CAN1_Tx.TransmitGlobalTime = DISABLE;
-    
-    HAL_StatusTypeDef err =  HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, (uint32_t *)CAN_TX_MAILBOX0);
+
+    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, (uint32_t *) CAN_TX_MAILBOX0);
     CAN_EXIT_CRITICAL();
     return err;
 }
 
-inline HAL_StatusTypeDef CAN1_Receive_Msg(uint8_t *buf)
-{
+/**
+ * @brief CAN1读取数据
+ * @param buf 数据缓冲区
+ * @return HAL Status structures definition
+ */
+HAL_StatusTypeDef CAN1_Receive_Msg(uint8_t *buf) {
     return HAL_CAN_GetRxMessage(&hcan1, CAN_FilterFIFO0, &CAN1_Rx, buf);
 }
 
 #ifdef CAN2_SUPPORT
-HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg)
-{
+
+/**
+ * @brief CAN2发送标准帧数据
+ * @param StdId 标准帧ID
+ * @param msg 数据数组,长度为8
+ * @return HAL Status structures definition
+ */
+HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
     CAN_ENTER_CRITICAL();
     CAN2_Tx.StdId = StdId;      //标准标识符
     CAN2_Tx.IDE = CAN_ID_STD;   //使用标准帧
     CAN2_Tx.RTR = CAN_RTR_DATA; //数据帧
     CAN2_Tx.DLC = 8;
     CAN2_Tx.TransmitGlobalTime = DISABLE;
-    HAL_StatusTypeDef err =  HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, (uint32_t *)CAN_TX_MAILBOX1);
+    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, (uint32_t *) CAN_TX_MAILBOX1);
     CAN_EXIT_CRITICAL();
     return err;
 }
 
-inline HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf)
-{
+/**
+ * @brief CAN2读取数据
+ * @param buf 数据缓冲区
+ * @return HAL Status structures definition
+ */
+HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf) {
     return HAL_CAN_GetRxMessage(&hcan2, CAN_FilterFIFO1, &CAN2_Rx, buf);
 }
 

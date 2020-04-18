@@ -1,13 +1,22 @@
 #ifndef _PID_H_
 #define _PID_H_
 
+/**
+ * @brief 限幅宏函数
+ * @param _IN_ 限幅变量
+ * @param _MAX_ 最大值
+ * @param _MIN_ 最小值
+ */
 #define limit(_IN_, _MAX_, _MIN_) \
     if (_IN_ < _MIN_)             \
         _IN_ = _MIN_;             \
     if (_IN_ > _MAX_)             \
-        _IN_ = _MAX_;
+        _IN_ = _MAX_
 
-typedef struct PID_PARAMETER
+/**
+ * @brief 标准位置式PID参数
+ */
+typedef struct __PID
 {
     float Kp;
     float Ki;
@@ -19,7 +28,10 @@ typedef struct PID_PARAMETER
     float pid_out;
 } PID;
 
-typedef struct PID_PARAMETER_SMIS
+/**
+ * @brief 带史密斯预估器的位置式PID参数
+ */
+typedef struct __PID_Smis
 {
     float Kp;
     float Ki;
@@ -30,7 +42,10 @@ typedef struct PID_PARAMETER_SMIS
     float pid_out;
 } PID_Smis;
 
-typedef struct PID_INCREASE
+/**
+ * @brief 增量式PID参数
+ */
+typedef struct __PID_ADD
 {
     float Kp;
     float Ki;
