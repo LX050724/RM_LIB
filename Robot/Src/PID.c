@@ -1,10 +1,17 @@
+/**
+ * @file    PID.c
+ * @author  yao
+ * @date    1-May-2020
+ * @brief   PID模块
+ */
+
 #include "PID.h"
 
 /**
  * @brief 标准位置式PID
- * @param current 实际值
- * @param expected 期望值
- * @param parameter PID参数
+ * @param[in] current 实际值
+ * @param[in] expected 期望值
+ * @param[in] parameter PID参数
  */
 void PID_Control(float current, float expected, PID *parameter) {
     parameter->error_last = parameter->error_now;
@@ -21,9 +28,9 @@ void PID_Control(float current, float expected, PID *parameter) {
 
 /**
  * @brief 增量式PID
- * @param current 实际值
- * @param expected 期望值
- * @param parameter PID参数
+ * @param[in] current 实际值
+ * @param[in] expect 期望值
+ * @param[in] parameter PID参数
  * @return PID增量
  */
 float PID_Increment(float current, float expect, PID_ADD *parameter) {
@@ -41,10 +48,10 @@ float PID_Increment(float current, float expect, PID_ADD *parameter) {
 
 /**
  * @brief 带史密斯预估器的位置式PID
- * @param current 实际值
- * @param expected 期望值
- * @param parameter PID参数
- * @param speed 实际速度
+ * @param[in] current 实际值
+ * @param[in] expected 期望值
+ * @param[in] parameter PID参数
+ * @param[in] speed 实际速度
  */
 void PID_Control_Smis(float current, float expected, PID_Smis *parameter, float speed) {
     parameter->error_now = expected - current;

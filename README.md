@@ -18,10 +18,10 @@
 > left_right_ref 左右方向分量
 > rotate_ref 旋转分量
 >
->+ `Chassis_Motor_PID_Expect` 电机速度结构体  
+>+ `Chassis_Motor_Speed` 电机速度结构体  
 > 内有4个成员分别是4个底盘电机>的速度
 >
->+ `void Chassis_Speed_Ref_Zero(ChassisSpeed_Ref_t* ref)`  
+>+ `void ChassisMotorSpeedClean(ChassisSpeed_Ref_t* ref)`  
 >将传入的速度矢量清零
 >
 >+ `__weak void PID_Expect(Chassis_Motor_PID_Expect* motor,ChassisSpeed_Ref_t* ref)`
@@ -68,12 +68,13 @@
 >>>+ PowerCOF 计算功率所用的系数,由MATLAB拟合
 >>>
 >>
->>>`void RM3508_SetPowerCOF(RM3508_TypeDef *Dst, float cc, float sc, float ss)` 设置计算功率所用系数  
+>>>`void RM3508_SetPowerCOF(RM3508_TypeDef *Dst, float cc, float sc, float ss, float constant)` 设置计算功率所用系数  
 >>>
 >>>+ Dst 3508电机数据结构体指针  
 >>>+ cc 电流平方项系数
 >>>+ sc 转速电流乘积项系数
 >>>+ ss 速度平方项系数
+>>>+ constant 常数项
 >>
 >>>`void RM3508_Receive(RM3508_TypeDef* Dst,uint8_t* Data)` RM3508数据接收
 >>>
@@ -260,7 +261,7 @@
 >
 >+ RxMsg 串口数据包数组指针
 
-> `void Remote_Zero(void)` 遥控器恢复默认值
+> `void RemoteClear(void)` 遥控器恢复默认值
 
 >`__weak void RemoteControlProcess(Remote *rc)` 摇杆模式处理函数
 >

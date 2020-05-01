@@ -1,3 +1,10 @@
+/**
+ * @file    WatchDog.h
+ * @author  yao
+ * @date    1-May-2020
+ * @brief   看门狗模块头文件
+ */
+
 #ifndef _WATCH_DOG_H_
 #define _WATCH_DOG_H_
 
@@ -17,8 +24,8 @@
  * @brief 看门狗结构体
  */
 typedef struct __WatchDog {
-    uint32_t Life;
-    uint32_t Max;
+    uint32_t Life;  //!<@brief 当前离线计数
+    uint32_t Max;   //!<@brief 最大离线计数
 } WatchDog_TypeDef, *WatchDogp;
 
 /**

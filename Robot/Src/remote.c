@@ -1,3 +1,10 @@
+/**
+ * @file    remote.c
+ * @author  yao
+ * @date    1-May-2020
+ * @brief   遥控器模块
+ */
+
 #include "remote.h"
 
 RC_Ctl_t RC_CtrlData = {.rc = {1024, 1024, 1024, 1024, 2,
@@ -5,7 +12,7 @@ RC_Ctl_t RC_CtrlData = {.rc = {1024, 1024, 1024, 1024, 2,
 
 /**
  * @brief 遥控器模式控制回调函数
- * @param rc 摇杆数据结构体
+ * @param[in] rc 摇杆数据结构体
  */
 __weak void RemoteControlProcess(Remote *rc) {
     UNUSED(rc);
@@ -13,9 +20,9 @@ __weak void RemoteControlProcess(Remote *rc) {
 
 /**
  * @brief 键鼠模式控制回调函数
- * @param mouse 鼠标数据结构体
- * @param key 键盘数据结构体
- * @param Lastkey 上一帧键盘数据结构体
+ * @param[in] mouse 鼠标数据结构体
+ * @param[in] key 键盘数据结构体
+ * @param[in] Lastkey 上一帧键盘数据结构体
  */
 __weak void MouseKeyControlProcess(Mouse *mouse, Key_t key, Key_t Lastkey) {
     UNUSED(mouse);
@@ -32,7 +39,7 @@ __weak void STOPControlProcess(void) {
 /**
  * @brief 遥控器数据归零
  */
-void Remote_Zero() {
+void RemoteClear() {
     RC_CtrlData.rc.ch0 = 1024;
     RC_CtrlData.rc.ch1 = 1024;
     RC_CtrlData.rc.ch2 = 1024;
@@ -52,7 +59,7 @@ void Remote_Zero() {
 
 /**
  * @brief 遥控器数据接收函数
- * @param RxMsg 遥控器串口原始数据
+ * @param[in] RxMsg 遥控器串口原始数据
  */
 void Remote_Rx(unsigned char *RxMsg) {
     RC_CtrlData.rc.ch0 = ((int16_t) RxMsg[0] | ((int16_t) RxMsg[1] << 8)) & 0x07FF;
