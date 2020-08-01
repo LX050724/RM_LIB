@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "chassis.h": "c",
-        "candrive.h": "c",
-        "watchdog.h": "c",
-        "kalmanii.h": "c"
-    }
-}
