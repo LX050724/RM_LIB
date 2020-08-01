@@ -42,7 +42,7 @@ typedef struct __kalman_filterII_t {
     struct kalman_filtercore {
         float raw_value;
         float filtered_value[2];
-        mat xhat, xhatminus, z, A, H, AT, HT, Q, R, P, Pminus, K, E;
+        arm_matrix_instance_f32 xhat, xhatminus, z, A, H, AT, HT, Q, R, P, Pminus, K, E;
     } kalman;
 } kalman_filterII_t;
 
