@@ -4,7 +4,7 @@
 
 ## 配置方法
 
->+ 添加全局宏定义__USE_RTOS决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护
+>+ 添加全局宏定义__USE_RTOS决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护以及巴特沃斯滤波器动态内存分配使用的函数
 >+ 添加全局宏定义WatchDoglength，并赋值看门狗最大数量启用看门狗
 >+ 添加全局宏定义CAN2_SUPPORT，启用CAN2支持
 
@@ -29,7 +29,7 @@
 
 ### FILTER_MODULE二阶阶卡尔曼滤波器模块
 
-*** !该模块依赖DSP库 ***
+**!该模块依赖DSP库**
 
 >+ `kalman_filterII_t`  
 >二阶卡尔曼滤波器结构体
@@ -45,10 +45,58 @@
 >+ `kalman_filter_t`  
 >一阶卡尔曼滤波器结构体
 >
->+ `void kalman_Init(kalman_filter_t *p, float T_Q, float T_R)`  
->初始化一阶卡尔曼滤波器
->+ `float Kalman_Filter(kalman_filter_t *p, float dat)`  
->一阶卡尔曼滤波器,dat是传入的信号,返回值为滤波信号
+>```C
+>/**
+>  * @brief 初始化一个卡尔曼滤波器
+>  * @param[out] p 滤波器
+>  * @param[in] T_Q 系统噪声协方差
+>  * @param[in] T_R 测量噪声协方差
+>  */
+>void kalman_Init(kalman_filter_t *p, float T_Q, float T_R);
+>
+>/**
+>  * @brief 卡尔曼滤波器
+>  * @param[in] p 滤波器
+>  * @param[in] dat 待滤波信号
+>  * @retval 滤波后的信号
+>  */
+>float Kalman_Filter(kalman_filter_t *p, float dat)
+>```
+>
+>
+### ButterworthFilterIIR_MODULE巴特沃斯滤波器模块
+
+> + ButterworthFilterIIR_t
+>   巴特沃斯滤波器结构体
+>
+>  ```C
+>   /**
+>    * @brief N阶巴特沃斯滤波器初始化
+>    * @param filter 滤波器
+>    * @param Sections 滤波器节数
+>    * @param Matlab_NUM Matlab导出头文件NUM系数
+>    * @param Matlab_DEN Matlab导出头文件DEN系数
+>    */
+>   void ButterworthFilterIIRInit(ButterworthFilterIIR_t *filter, uint32_t Sections,
+>                             const float (*Matlab_NUM)[3],
+>                             const float (*Matlab_DEN)[3]);
+>   
+>   /**
+>    * @brief 释放巴特沃斯滤波器内存
+>    * @param filter 巴特沃斯滤波器
+>    */
+>   void ButterworthFilterIIRDelete(ButterworthFilterIIR_t *filter);
+>   
+>   /**
+>    * @brief N阶巴特沃斯滤波器
+>    * @param filter 滤波器
+>    * @param input 信号输入
+>    * @return 滤波信号输出
+>    */
+>   float ButterworthFilterIIR(ButterworthFilterIIR_t *filter, float input);
+>  ```
+
+
 
 ### MOTOR_MODULE电机模块
 
@@ -290,18 +338,23 @@
 >+ hcan CAN句柄  
 
 > #### CAN1变量及函数
->`CAN_RxHeaderTypeDef CAN1_Rx` CAN1接收控制,详见HAL库说明
->`CAN_TxHeaderTypeDef CAN1_Tx` CAN1发送控制,详见HAL库说明
->`uint8_t CAN1_buff[8]` CAN1数据缓冲区  
->>`HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg)` CAN1发送数据
->>
->>+ StdId 标准帧ID
->>+ msg 数据包数组首地址
->>
-> *若使能CAN2,有相同的函数及变量的CAN2版本*
+> `CAN_RxHeaderTypeDef CAN1_Rx` CAN1接收控制,详见HAL库说明
+> `CAN_TxHeaderTypeDef CAN1_Tx` CAN1发送控制,详见HAL库说明
+> `uint8_t CAN1_buff[8]` CAN1数据缓冲区  
+> >`HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg)` CAN1发送数据
+> >
+> >+ StdId 标准帧ID
+> >+ msg 数据包数组首地址
+> >
+> >*若使能CAN2,有相同的函数及变量的CAN2版本*
+> >
+> >使能CAN2的方法为在全局变量中添加`CAN2_SUPPORT`宏
 >
 
+如果使用了实时系统需要添加`__USE_RTOS`全局宏定义来配置临界区保护
+
 ### WATCHDOG_MODULE 看门狗模块
+
 
 >`WatchDog_TypeDef` 看门狗句柄
 
@@ -321,3 +374,13 @@
 >`void FeedDog_CallBack(WatchDogp handle)` 看门狗喂狗回调函数
 >
 >+ handle 看门狗句柄指针
+
+使用看门狗时需要在全局宏定义中定义`WatchDoglength`并赋值一个整数作为最大看门狗数量，该值不能小于实际看门狗数量
+看门狗结构体不能在局部变量中定义，要在全局变量中定义。
+
+### Cortex-M4平台DSP库添加方法
+
+1. 添加全局宏定义`ARM_MATH_CM4`和`__TARGET_FPU_VFP`，前者启用DSP库，后者启用FPU
+2. 添加包含路径`Drivers\CMSIS\DSP\Include`包含DSP库头文件
+3. 添加预编译库`Drivers\CMSIS\Lib\ARM\arm_cortexM4lf_math.lib`到源文件中
+

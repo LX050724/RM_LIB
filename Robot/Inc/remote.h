@@ -22,20 +22,19 @@
 /**
  * @brief 摇杆数据结构体
  */
-typedef __PACKED_STRUCT __Remote{
+typedef __Remote {
         int16_t ch0;  //!<@brief 摇杆通道0数据
         int16_t ch1;  //!<@brief 摇杆通道1数据
         int16_t ch2;  //!<@brief 摇杆通道2数据
         int16_t ch3;  //!<@brief 摇杆通道3数据
         int8_t s1;    //!<@brief 开关1状态
         int8_t s2;    //!<@brief 开关2状态
-}
-Remote;
+} Remote;
 
 /**
  * @brief 鼠标数据结构体
  */
-typedef __PACKED_STRUCT __Mouse{
+typedef __Mouse {
         int16_t x;              //!<@brief 鼠标x轴速度
         int16_t y;              //!<@brief 鼠标y轴速度
         int16_t z;              //!<@brief 鼠标z轴速度
@@ -43,8 +42,7 @@ typedef __PACKED_STRUCT __Mouse{
         uint8_t last_press_r;   //!<@brief 上一次右键状态
         uint8_t press_l;        //!<@brief 左键状态
         uint8_t press_r;        //!<@brief 右键状态
-}
-Mouse;
+} Mouse;
 
 /**
  * @brief 键盘数据结构体
@@ -70,21 +68,13 @@ typedef struct __Key_t {
 } Key_t;
 
 /**
- * @brief 键盘数据转换共用体
- */
-typedef union __Key_U {
-    uint16_t S;    //!<@brief 原始数据
-    Key_t D;       //!<@brief 键盘数据
-} Key_U;
-
-/**
  * @brief 遥控器整体数据结构体
  */
 typedef struct __RC_Ctl_t {
     Remote rc;        //!<@brief 遥控器数据
     Mouse mouse;      //!<@brief 鼠标数据
-    Key_U key;        //!<@brief 键盘数据
-    Key_U Lastkey;    //!<@brief 上一帧键盘数据
+    Key_t key;        //!<@brief 键盘数据
+    Key_t Lastkey;    //!<@brief 上一帧键盘数据
 } RC_Ctl_t;
 
 /**

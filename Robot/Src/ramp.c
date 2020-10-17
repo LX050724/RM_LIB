@@ -15,9 +15,7 @@
  * @note 可重写该函数，更换为自定义时钟源
  * @return 时钟计数值
  */
-__weak uint32_t
-
-Get_TimerTick() {
+__weak uint32_t Get_TimerTick() {
     return HAL_GetTick();
 }
 

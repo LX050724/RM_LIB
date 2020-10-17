@@ -5,7 +5,7 @@
  * @brief   一阶卡尔曼滤波器模块
  * @details
  *   实现过程完全与硬件无关，可直接调用，任意移植。
- *   使用时先定义一个kalman指针，然后调用kalmanCreate()创建一个滤波器
+ *   使用时先定义一个kalman对象，然后调用kalmanCreate()创建一个滤波器
  *   每次读取到传感器数据后即可调用KalmanFilter()来对数据进行滤波。
  *
  *          kalman p;

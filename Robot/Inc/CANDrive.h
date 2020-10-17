@@ -35,7 +35,7 @@
 #else
 #define CAN_ENTER_CRITICAL()
 #define CAN_EXIT_CRITICAL()
-#endif 
+#endif //__USE_RTOS
 
 /**
  * @brief can枚举
@@ -60,7 +60,9 @@ extern CAN_TxHeaderTypeDef CAN2_Tx;
 extern uint8_t CAN2_buff[8];
 HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg);
 HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf);
-#endif
 
-#endif
-#endif
+#endif //CAN2_SUPPORT
+
+#endif //HAL_CAN_MODULE_ENABLED
+
+#endif //_CANDrive_H_
