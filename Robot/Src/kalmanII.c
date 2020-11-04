@@ -84,4 +84,3 @@ float *KalmanII_Filter(kalman_filterII_t *I, float signal1, float signal2) {
     F->filtered_value[1] = F->xhat.pData[1];
     return F->filtered_value;
 }
-

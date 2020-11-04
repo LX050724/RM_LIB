@@ -83,7 +83,7 @@
 #endif //__USE_RTOS
 
 #else //__UVISION_VERSION
-
+#include "stdint.h"
 #include "stdlib.h"
 #define RMLIB_ENTER_CRITICAL()
 #define RMLIB_ENTER_CRITICAL()

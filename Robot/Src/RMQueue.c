@@ -16,6 +16,7 @@ RM_Status RMQueueInit(RMQueue_Handle *handle, uint32_t typeSize, uint32_t depth)
     handle->head = 0;
     handle->end = 0;
     handle->size = 0;
+    handle->Lock = 0;
     return RM_SUCCESS;
 }
 
