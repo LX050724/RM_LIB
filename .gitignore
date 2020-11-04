@@ -74,6 +74,8 @@ Middlewares
 *.tem
 *.temp
 *.jscope
-
+html
+doc
+latex
 
 # End of https://www.toptal.com/developers/gitignore/api/keil

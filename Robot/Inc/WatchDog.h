@@ -2,7 +2,7 @@
  * @file    WatchDog.h
  * @author  yao
  * @date    1-May-2020
- * @brief   看门狗模块头文件
+ * @brief   软件看门狗模块头文件
  */
 
 #ifndef _WATCH_DOG_H_
@@ -10,20 +10,12 @@
 
 #if defined(WatchDoglength) && WatchDoglength > 0
 
-#if defined(STM32F407xx) || defined(STM32F405xx) || defined(STM32F427xx)
-
-#include <stm32f4xx.h>
-
-#elif defined(STM32F303xx) || defined(STM32F334xx)
-#include <stm32f3xx.h>
-#elif defined(STM32F103xx)
-#include <stm32f1xx.h>
-#endif
+#include "RMLibHead.h"
 
 /**
  * @brief 看门狗结构体
  */
-typedef struct __WatchDog {
+typedef struct {
     uint32_t Life;  //!<@brief 当前离线计数
     uint32_t Max;   //!<@brief 最大离线计数
 } WatchDog_TypeDef, *WatchDogp;
@@ -35,13 +27,34 @@ typedef struct __WatchDog {
  */
 #define IS_Dog(handle, Dog) ((handle) == &(Dog))
 
+/**
+ * @brief 初始化看门狗
+ * @param[out] handle 看门狗结构体指针
+ * @param[in] Life
+ */
+void WatchDog_Init(WatchDogp handle, uint32_t Life);
+
+
+/**
+ * @brief 看门狗回调
+ * @param[in] handle 看门狗结构体指针
+ */
 void WatchDog_CallBack(WatchDogp handle);
 
+/**
+ * @brief 喂狗事件回调
+ * @param[in] handle 看门狗结构体指针
+ */
 void FeedDog_CallBack(WatchDogp handle);
 
-void Feed_Dog(WatchDogp handle);
-
-void WatchDog_Init(WatchDogp handle, uint32_t Life);
+/**
+ * @brief 喂狗函数
+ * @param[in] handle 看门狗结构体指针
+ */
+inline void Feed_Dog(WatchDogp handle) {
+    handle->Life = 0;
+    FeedDog_CallBack(handle);
+}
 
 #endif
 #endif

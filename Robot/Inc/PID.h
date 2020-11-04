@@ -23,7 +23,7 @@
 /**
  * @brief 标准位置式PID参数
  */
-typedef struct __PID {
+typedef struct {
     float Kp;           //!<@brief 比例系数
     float Ki;           //!<@brief 积分系数
     float Kd;           //!<@brief 微分系数
@@ -37,7 +37,7 @@ typedef struct __PID {
 /**
  * @brief 带史密斯预估器的位置式PID参数
  */
-typedef struct __PID_Smis {
+typedef struct {
     float Kp;           //!<@brief 比例系数
     float Ki;           //!<@brief 积分系数
     float Kd;           //!<@brief 微分系数
@@ -50,7 +50,7 @@ typedef struct __PID_Smis {
 /**
  * @brief 增量式PID参数
  */
-typedef struct __PID_ADD {
+typedef struct {
     float Kp;           //!<@brief 比例系数
     float Ki;           //!<@brief 积分系数
     float Kd;           //!<@brief 微分系数
@@ -60,10 +60,30 @@ typedef struct __PID_ADD {
     float increament;   //!<@brief PID增量
 } PID_ADD;
 
+/**
+ * @brief 标准位置式PID
+ * @param[in] current 实际值
+ * @param[in] expected 期望值
+ * @param[in] parameter PID参数
+ */
 void PID_Control(float current, float expected, PID *data);
 
+/**
+ * @brief 带史密斯预估器的位置式PID
+ * @param[in] current 实际值
+ * @param[in] expected 期望值
+ * @param[in] parameter PID参数
+ * @param[in] speed 实际速度
+ */
 void PID_Control_Smis(float current, float expected, PID_Smis *data, float speed);
 
+/**
+ * @brief 增量式PID
+ * @param[in] current 实际值
+ * @param[in] expect 期望值
+ * @param[in] parameter PID参数
+ * @return PID增量
+ */
 float PID_Increment(float current, float expect, PID_ADD *parameter);
 
 #endif

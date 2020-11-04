@@ -1,0 +1,106 @@
+/**
+ * @file    RMLibHead.h
+ * @author  Yao
+ * @date    2020年11月4日
+ * @brief   RMLib头文件，引用库文件并定义基本返回值，支持实时系统临界区和动态内存函数
+ */
+
+/**@mainpage
+ * <table>
+ * <tr><th>Project  <td>RMLib
+ * <tr><th>Author   <td>yao
+ * </table>
+ * @section Robomaster整合库
+ *
+ * <h1><a href="http://git.kdrobot.top/KDRobot_RM/RM_LIB">Git页面</a></h1>
+ *
+ * <table>
+ * <tr><th>CAN底层驱动模块  <td>@see CANDrive.h @see CANDrive.c
+ * <tr><th>底盘驱动模块  <td>@see Chassis.h @see Chassis.c
+ * <tr><th>任意阶IIR直接II型，二阶节滤波器模块  <td>@see IIRFilter.h @see IIRFilter.c
+ * <tr><th>二阶卡尔曼滤波器模块  <td>@see kalmanII.h @see kalmanII.c
+ * <tr><th>一阶卡尔曼滤波器模块  <td>@see kalman.h @see kalman.c
+ * <tr><th>电机驱动模块  <td>@see motor.h @see motor.c
+ * <tr><th>PID模块  <td>@see PID.h @see PID.c
+ * <tr><th>斜坡函数模块  <td>@see ramp.h @see ramp.c
+ * <tr><th>遥控器模块  <td>@see remote.h @see remote.c
+ * <tr><th>队列模块  <td>@see RMQueue.h @see RMQueue.c
+ * <tr><th>软件看门狗模块头  <td>@see WatchDog.h @see WatchDog.c
+ * </table>
+ */
+
+#ifndef _RMLIBHEAD_H
+#define _RMLIBHEAD_H
+
+#if defined(__ARMCC_VERSION)
+#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || \
+    defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || \
+    defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || \
+    defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F469xx) || \
+    defined(STM32F479xx) || defined(STM32F412Cx) || defined(STM32F412Zx) || defined(STM32F412Rx) || \
+    defined(STM32F412Vx) || defined(STM32F413xx) || defined(STM32F423xx)
+#include <stm32f4xx.h>
+#elif defined(STM32F030x6)|| defined(STM32F030x8)|| defined(STM32F031x6)|| defined(STM32F038xx)|| \
+      defined(STM32F042x6)|| defined(STM32F048xx)|| defined(STM32F051x8)|| defined(STM32F058xx)|| \
+      defined(STM32F070x6)|| defined(STM32F070xB)|| defined(STM32F071xB)|| defined(STM32F072xB)|| \
+      defined(STM32F078xx)|| defined(STM32F091xC)|| defined(STM32F098xx)|| defined(STM32F030xC)
+#include <stm32f0xx.h>
+#elif defined(STM32F100xB) || defined(STM32F100xE) || defined(STM32F101x6) || defined(STM32F101xB) || \
+      defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F102x6) || defined(STM32F102xB) || \
+      defined(STM32F103x6) || defined(STM32F103xB) || defined(STM32F103xE) || defined(STM32F103xG) || \
+      defined(STM32F105xC) || defined(STM32F107xC)
+#include <stm32f1xx.h>
+#elif defined(STM32F301x8) || defined(STM32F302x8) || defined(STM32F302xC) || defined(STM32F302xE) || \
+      defined(STM32F303x8) || defined(STM32F303xC) || defined(STM32F303xE) || defined(STM32F373xC) || \
+      defined(STM32F334x8) || defined(STM32F318xx) || defined(STM32F328xx) || defined(STM32F358xx) || \
+      defined(STM32F378xx) || defined(STM32F398xx)
+#include <stm32f3xx.h>
+#elif defined(STM32H743xx) || defined(STM32H753xx) || defined(STM32H750xx) || defined(STM32H742xx) || \
+      defined(STM32H745xx) || defined(STM32H755xx) || defined(STM32H747xx) || defined(STM32H757xx) || \
+      defined(STM32H7B0xx) || defined(STM32H7B0xxQ)|| defined(STM32H7A3xx) || defined(STM32H7B3xx) || \
+      defined(STM32H7A3xxQ)|| defined(STM32H7B3xxQ)|| defined(STM32H735xx) || defined(STM32H733xx) || \
+      defined(STM32H730xx) || defined(STM32H730xxQ)|| defined(STM32H725xx) || defined(STM32H723xx)
+#include <stm32h7xx.h>
+#endif
+
+#ifdef __USE_RTOS
+
+#include "FreeRTOS.h"
+#include "cmsis_os.h"
+#define RMLIB_ENTER_CRITICAL() taskENTER_CRITICAL()
+#define RMLIB_ENTER_CRITICAL() taskEXIT_CRITICAL()
+#define RMLIB_MALLOC(SIZE) pvPortMalloc(SIZE)
+#define RMLIB_FREE(P) vPortFree(P)
+
+#else //__USE_RTOS
+
+#include "stdlib.h"
+#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_MALLOC(SIZE) malloc(SIZE)
+#define RMLIB_FREE(P) free(P)
+
+#endif //__USE_RTOS
+
+#else //__UVISION_VERSION
+
+#include "stdlib.h"
+#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_MALLOC(SIZE) malloc(SIZE)
+#define RMLIB_FREE(P) free(P)
+
+#endif //__UVISION_VERSION
+
+#include <string.h>
+
+typedef enum {
+    RM_SUCCESS = 1,
+    RM_YES = RM_SUCCESS,
+    RM_ENABLE = RM_SUCCESS,
+    RM_ERROR = 0,
+    RM_NO = RM_ERROR,
+    RM_DISABLE = RM_ERROR,
+} RM_Status;
+
+#endif //_RMLIBHEAD_H

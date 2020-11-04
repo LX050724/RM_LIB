@@ -8,14 +8,8 @@
 #ifndef _MOTOR_H_
 #define _MOTOR_H_
 
-#if defined(STM32F407xx) || defined(STM32F405xx) || defined(STM32F427xx)
-#include <stm32f4xx.h>
-#elif defined(STM32F303xx) || defined(STM32F334xx)
-#include <stm32f3xx.h>
-#elif defined(STM32F103xx)
-#include <stm32f1xx.h>
-#endif
-
+#include "RMLibHead.h"
+#ifdef HAL_CAN_MODULE_ENABLED
 #include "CANDrive.h"
 
 #define RM3508_LIMIT 16384  //!<@brief RM3508的输出限幅
@@ -28,7 +22,7 @@
 /**
  * @brief RM3508电机数据结构体
  */
-typedef struct __RM3508_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度
     int16_t Speed;              //!<@brief 转速
     int16_t TorqueCurrent;      //!<@brief 转矩电流
@@ -49,7 +43,7 @@ typedef struct __RM3508_TypeDef {
 /**
  * @brief GM6020电机数据结构体
  */
-typedef struct __GM6020_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度
     int16_t Speed;              //!<@brief 转速
     int16_t TorqueCurrent;      //!<@brief 转矩电流
@@ -63,7 +57,7 @@ typedef struct __GM6020_TypeDef {
 /**
  * @brief RM3510电机数据结构体
  */
-typedef struct __RM3510_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度    
     int16_t Speed;              //!<@brief 转速
 } RM3510_TypeDef;
@@ -71,7 +65,7 @@ typedef struct __RM3510_TypeDef {
 /**
  * @brief GM3510电机数据结构体
  */
-typedef struct __GM3510_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度
     int16_t OutputTorque;       //!<@brief 输出扭矩
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
@@ -83,7 +77,7 @@ typedef struct __GM3510_TypeDef {
 /**
  * @brief M2006电机数据结构体
  */
-typedef struct __M2006_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度
     int16_t Speed;              //!<@brief 转速
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
@@ -95,7 +89,7 @@ typedef struct __M2006_TypeDef {
 /**
  * @brief RM6623电机数据结构体
  */
-typedef struct __RM6623_TypeDef {
+typedef struct {
     uint16_t MchanicalAngle;    //!<@brief 机械角度
     int16_t TorqueCurrent;      //!<@brief 转矩电流
     int16_t SetTorqueCurrent;   //!<@brief 设定转矩电流
@@ -105,21 +99,99 @@ typedef struct __RM6623_TypeDef {
     float Angle_DEG;            //!<@brief 连续化角度制角度
 } RM6623_TypeDef;
 
-
+/**
+ * @brief RM6623数据接收
+ * @param[out] Dst RM6623电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 void RM6623_Receive(RM6623_TypeDef *Dst, uint8_t *Data);
 
+/**
+ * @brief RM3510数据接收
+ * @param[out] Dst RM3510电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 void RM3510_Receive(RM3510_TypeDef *Dst, uint8_t *Data);
 
-void RM3508_SetPowerCOF(RM3508_TypeDef *Dst, float cc, float sc, float ss, float constant);
+/**
+ * @brief 设置RM3508功率计算参数
+ * @param[out] Dst RM3510电机数据结构体指针
+ * @param[in] cc 电流平方项系数
+ * @param[in] sc 电流,转速乘积项系数
+ * @param[in] ss 转速平方项系数
+ * @param[in] constant 常数项
+ */
+static inline void RM3508_SetPowerCOF(RM3508_TypeDef *Dst, float cc, float sc, float ss, float constant) {
+    Dst->PowerCOF.cc = cc;
+    Dst->PowerCOF.sc = sc;
+    Dst->PowerCOF.ss = ss;
+    Dst->PowerCOF.constant = constant;
+}
 
+/**
+ * @brief RM3508数据接收
+ * @param[out] Dst RM3508电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 void RM3508_Receive(RM3508_TypeDef *Dst, uint8_t *Data);
+
+/**
+ * @brief GM6020数据接收
+ * @param[out] Dst GM6020电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 
 void GM6020_Receive(GM6020_TypeDef *Dst, uint8_t *Data);
 
+/**
+ * @brief M2006数据接收
+ * @param[out] Dst M2006电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 void M2006_Receive(M2006_TypeDef *Dst, uint8_t *Data);
 
+/**
+ * @brief GM3510数据接收
+ * @param[out] Dst GM3510电机数据结构体指针
+ * @param[in] Data CAN数据帧指针
+ */
 void GM3510_Receive(GM3510_TypeDef *Dst, uint8_t *Data);
 
+
+/**
+ * @brief 发送电机控制信号
+ * @param[in] can CAN枚举
+ * @param[in] STD_ID 标准帧ID
+ * @param[in] Data 电机控制信号数组指针
+ * @return HAL Status structures definition
+ */
 HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data);
 
+/**
+ * @brief 寻找最短归中路径
+ * @details
+ *      <tr>输入中值和电机机械角度，函数会将机械角度处理成为以中值为中心的值，并且是绝对的</p>
+ *      其中Mid_是中值的对称点
+ *      归中方向示意图:
+ *
+ *          || <<<<< | >>>>>>>>>>>> | <<<<< ||
+ *          0       Mid_           Mid     8191
+ *          || >>>>> | <<<<<<<<<<<< | >>>>> ||
+ *          0       Mid            Mid_    8191
+ *
+ *      使用方法：
+ *          作为将返回值直接作为PID实际值，期望为普通的中值</tr>
+ * @param[in] Mch 电机机械角度
+ * @param[in] Mid 归中中值
+ * @return 映射过的机械角度
+ */
+inline int16_t QuickCentering(uint16_t Mch, uint16_t Mid) {
+    uint16_t Mid_ = (Mid + 4095) % 8192;
+    if (Mid_ < Mid)
+        return Mch < Mid_ ? Mch + 8192 : Mch;
+    else
+        return Mch > Mid_ ? Mch - 8192 : Mch;
+}
+
+#endif
 #endif

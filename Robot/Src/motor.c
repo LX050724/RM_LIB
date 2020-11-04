@@ -7,7 +7,7 @@
  */
 
 #include <motor.h>
-#include <CANDrive.h>
+#ifdef HAL_CAN_MODULE_ENABLED
 
 /**
  * @brief 用转矩电流计算得到功率值
@@ -16,54 +16,24 @@
  * @param[in] pcof 参数
  * @return 电机功率
  */
-float GetChassisMotorPower(int speed, int current, struct PowerCOF_s *pcof) {
+static inline float GetChassisMotorPower(int speed, int current, struct PowerCOF_s *pcof) {
     return (pcof->ss * speed * speed +
             pcof->sc * speed * current +
             pcof->cc * current * current +
             pcof->constant);
 }
 
-/**
- * @brief RM6623数据接收
- * @param[out] Dst RM6623电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void RM6623_Receive(RM6623_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->TorqueCurrent = (uint16_t)(Data[2] << 8 | Data[3]);
     Dst->SetTorqueCurrent = (uint16_t)(Data[4] << 8 | Data[5]);
 }
 
-/**
- * @brief RM3510数据接收
- * @param[out] Dst RM3510电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void RM3510_Receive(RM3510_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
 }
 
-/**
- * @brief 设置RM3508功率计算参数
- * @param[out] Dst RM3510电机数据结构体指针
- * @param[in] cc 电流平方项系数
- * @param[in] sc 电流,转速乘积项系数
- * @param[in] ss 转速平方项系数
- * @param[in] constant 常数项
- */
-void RM3508_SetPowerCOF(RM3508_TypeDef *Dst, float cc, float sc, float ss, float constant) {
-    Dst->PowerCOF.cc = cc;
-    Dst->PowerCOF.sc = sc;
-    Dst->PowerCOF.ss = ss;
-    Dst->PowerCOF.constant = constant;
-}
-
-/**
- * @brief RM3508数据接收
- * @param[out] Dst RM3508电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void RM3508_Receive(RM3508_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
@@ -83,11 +53,6 @@ void RM3508_Receive(RM3508_TypeDef *Dst, uint8_t *Data) {
     Dst->LsatAngle = Dst->MchanicalAngle;
 }
 
-/**
- * @brief GM3510数据接收
- * @param[out] Dst GM3510电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void GM3510_Receive(GM3510_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->OutputTorque = (uint16_t)(Data[2] << 8 | Data[3]);
@@ -104,11 +69,6 @@ void GM3510_Receive(GM3510_TypeDef *Dst, uint8_t *Data) {
     Dst->LsatAngle = Dst->MchanicalAngle;
 }
 
-/**
- * @brief GM6020数据接收
- * @param[out] Dst GM6020电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void GM6020_Receive(GM6020_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
@@ -127,11 +87,6 @@ void GM6020_Receive(GM6020_TypeDef *Dst, uint8_t *Data) {
     Dst->LsatAngle = Dst->MchanicalAngle;
 }
 
-/**
- * @brief M2006数据接收
- * @param[out] Dst M2006电机数据结构体指针
- * @param[in] Data CAN数据帧指针
- */
 void M2006_Receive(M2006_TypeDef *Dst, uint8_t *Data) {
     Dst->MchanicalAngle = (uint16_t)(Data[0] << 8 | Data[1]);
     Dst->Speed = (int16_t)(Data[2] << 8 | Data[3]);
@@ -148,13 +103,6 @@ void M2006_Receive(M2006_TypeDef *Dst, uint8_t *Data) {
     Dst->LsatAngle = Dst->MchanicalAngle;
 }
 
-/**
- * @brief 发送电机控制信号
- * @param[in] can CAN枚举
- * @param[in] STD_ID 标准帧ID
- * @param[in] Data 电机控制信号数组指针
- * @return HAL Status structures definition
- */
 HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data) {
     uint8_t temp[8];
     temp[0] = (uint8_t)(Data[0] >> 8);
@@ -174,3 +122,5 @@ HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data) {
     else
         return HAL_ERROR;
 }
+
+#endif

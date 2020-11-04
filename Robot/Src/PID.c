@@ -7,12 +7,6 @@
 
 #include "PID.h"
 
-/**
- * @brief 标准位置式PID
- * @param[in] current 实际值
- * @param[in] expected 期望值
- * @param[in] parameter PID参数
- */
 void PID_Control(float current, float expected, PID *parameter) {
     parameter->error_last = parameter->error_now;
     parameter->error_now = expected - current;
@@ -26,13 +20,6 @@ void PID_Control(float current, float expected, PID *parameter) {
                          parameter->Kd * (parameter->error_now - parameter->error_last);
 }
 
-/**
- * @brief 增量式PID
- * @param[in] current 实际值
- * @param[in] expect 期望值
- * @param[in] parameter PID参数
- * @return PID增量
- */
 float PID_Increment(float current, float expect, PID_ADD *parameter) {
     parameter->error_now = expect - current;
 
@@ -46,13 +33,6 @@ float PID_Increment(float current, float expect, PID_ADD *parameter) {
     return parameter->increament;
 }
 
-/**
- * @brief 带史密斯预估器的位置式PID
- * @param[in] current 实际值
- * @param[in] expected 期望值
- * @param[in] parameter PID参数
- * @param[in] speed 实际速度
- */
 void PID_Control_Smis(float current, float expected, PID_Smis *parameter, float speed) {
     parameter->error_now = expected - current;
     parameter->error_inter += parameter->error_now;

@@ -1,5 +1,7 @@
 # RM_LIB —— Robomaster整合库
 
+***！！！README文档不再更新，详细参见 [Doxygen在线文档](http://www.kdrobot.top:8082/RM_LIB_Doxygen/index.html)！！！***
+
 注意使用的HAL库的版本大于1.19.0,推荐1.24.x
 
 ## 配置方法
@@ -34,10 +36,10 @@
 >+ `kalman_filterII_t`  
 >二阶卡尔曼滤波器结构体
 >
->+ `void kalmanInitII(kalman_filter_t *I)`  
+>+ `void kalmanII_Init(kalman_filter_t *I)`  
 >初始化二阶卡尔曼滤波器
 >
->+ `float* KalmanFilterII(kalman_filter_t *I, float signal1, float signal2)`  
+>+ `float* KalmanII_Filter(kalman_filter_t *I, float signal1, float signal2)`  
 >二阶卡尔曼滤波器,signal是传入的两个信号,返回值为滤波结果,是长度为2的float数组指针
 
 ### KALMAN_MODULE一阶卡尔曼滤波器模块
@@ -344,6 +346,7 @@
 > `CAN_RxHeaderTypeDef CAN1_Rx` CAN1接收控制,详见HAL库说明
 > `CAN_TxHeaderTypeDef CAN1_Tx` CAN1发送控制,详见HAL库说明
 > `uint8_t CAN1_buff[8]` CAN1数据缓冲区  
+>
 > >`HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg)` CAN1发送数据
 > >
 > >+ StdId 标准帧ID
@@ -380,6 +383,70 @@
 
 使用看门狗时需要在全局宏定义中定义`WatchDoglength`并赋值一个整数作为最大看门狗数量，该值不能小于实际看门狗数量
 看门狗结构体不能在局部变量中定义，要在全局变量中定义。
+
+### RMQueue 队列容器模块
+
+先使用RMQueueInit将队列初始化使用完需要RMQueueDelete释放队列内存如果未释放内存把队列对象丢失会造成内存泄漏
+>`RMQueue_Handle` 队列句柄
+>
+>```C
+>/**
+> * @brief 初始化队列
+> * @param handle 队列句柄
+> * @param typeSize 元素大小
+> * @param depth 队列深度
+> * @return 成功分配内存返回RM_SUCCESS，否则返回RM_ERROR
+> */
+>RM_Status RMQueueInit(RMQueue_Handle *handle, uint32_t typeSize, uint32_t depth);
+>
+>/**
+> * @brief 将数据压入队列
+> * @param handle 队列句柄
+> * @param dataPtr 数据指针
+> * @return 成功返回RM_SUCCESS， 队列满返回RM_ERROR
+> */
+>RM_Status RMQueuePush(RMQueue_Handle *handle, void *dataPtr);
+>
+>/**
+> * @brief 弹出队列首元素
+> * @param handle 队列句柄
+> * @return 队列首元素指针
+> */
+>void *RMQueuePop(RMQueue_Handle *handle);
+>
+>/**
+> * @brief 删除队列，释放内存
+> * @param handle 队列句柄
+> */
+>void RMQueueDelete(RMQueue_Handle *handle);
+>
+>/**
+> * @brief 清除队列中的内容
+> * @param handle 队列句柄
+> */
+>static inline void RMQueueClear(RMQueue_Handle *handle) {
+>    handle->head = 0;
+>    handle->end = 0;
+>}
+>
+>/**
+> * @brief 返回队列的大小
+> * @param handle 队列句柄
+> * @return 队列大小
+> */
+>static inline uint32_t RMQueueSize(RMQueue_Handle *handle) {
+>    return handle->size;
+>}
+>
+>/**
+> * @brief 判断队列为空
+> * @param handle 队列句柄
+> * @return 队列为空返回真
+> */
+>static inline RM_Status RMQueueIsEmpty(RMQueue_Handle *handle) {
+>    return handle->size == 0 ? RM_YES : RM_NO;
+>}
+>```
 
 ### Cortex-M4平台DSP库添加方法
 

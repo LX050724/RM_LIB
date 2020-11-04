@@ -33,11 +33,6 @@ void HAL_IncTick(void) {
     }
 }
 
-/**
- * @brief 初始化看门狗
- * @param[out] handle 看门狗结构体指针
- * @param[in] Life 
- */
 void WatchDog_Init(WatchDogp handle, uint32_t Life) {
     if (Len >= WatchDoglength)
         return;
@@ -45,27 +40,10 @@ void WatchDog_Init(WatchDogp handle, uint32_t Life) {
     List[Len++] = handle;
 }
 
-/**
- * @brief 喂狗函数
- * @param[in] handle 看门狗结构体指针
- */
-void Feed_Dog(WatchDogp handle) {
-    handle->Life = 0;
-    FeedDog_CallBack(handle);
-}
-
-/**
- * @brief 喂狗事件回调
- * @param[in] handle 看门狗结构体指针
- */
 __weak void FeedDog_CallBack(WatchDogp handle) {
     UNUSED(handle);
 }
 
-/**
- * @brief 看门狗回调
- * @param[in] handle 看门狗结构体指针
- */
 __weak void WatchDog_CallBack(WatchDogp handle) {
     UNUSED(handle);
 }
