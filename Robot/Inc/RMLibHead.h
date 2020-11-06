@@ -12,7 +12,7 @@
  * </table>
  * @section Robomaster整合库
  *
- * <h1><a href="http://git.kdrobot.top/KDRobot_RM/RM_LIB">Git页面</a></h1>
+ * <h1><a href="http://www.kdrobot.top/git/KDRobot_RM/RM_LIB">Git页面</a></h1>
  *
  * <table>
  * <tr><th>CAN底层驱动模块  <td>@see CANDrive.h @see CANDrive.c
