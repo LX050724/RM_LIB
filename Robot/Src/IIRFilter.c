@@ -4,8 +4,8 @@
 void IIRFilterInit(IIRFilter_t *filter, uint32_t Sections,
                    const float (*Matlab_NUM)[3],
                    const float (*Matlab_DEN)[3]) {
-    filter->Matlab_DEN = Matlab_DEN;
-    filter->Matlab_NUM = Matlab_NUM;
+    filter->Matlab_DEN = (float (*)[3]) Matlab_DEN;
+    filter->Matlab_NUM = (float (*)[3]) Matlab_NUM;
     filter->Sections = Sections;
     filter->w = (float (*)[2]) RMLIB_MALLOC(sizeof(float) * 2 * filter->Sections);
     for (uint32_t i = 0; i < filter->Sections; i++)
@@ -37,9 +37,9 @@ static inline float IIRFilter1Section(float *a, float *b, float s, float *w, flo
 
 float IIRFilter(IIRFilter_t *filter, float input) {
     for (uint32_t i = 0; i < filter->Sections; i++) {
-        input = IIRFilter1Section(Matlab_DEN[i * 2 + 1] + 1,
-                                  Matlab_NUM[i * 2 + 1] + 1,
-                                  Matlab_NUM[i * 2][0],
+        input = IIRFilter1Section(filter->Matlab_DEN[i * 2 + 1] + 1,
+                                  filter->Matlab_NUM[i * 2 + 1] + 1,
+                                  filter->Matlab_NUM[i * 2][0],
                                   filter->w[i], input);
     }
     return input * filter->Matlab_NUM[filter->Sections * 2][0];
