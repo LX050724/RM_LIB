@@ -29,13 +29,19 @@ RM_Status RMQueuePush(RMQueue_Handle *handle, void *dataPtr) {
     } else return RM_ERROR;
 }
 
+void *RMQueueTop(RMQueue_Handle *handle) {
+    if (handle->size != 0)
+        return handle->dataPtr[handle->head];
+    else return NULL;
+}
+
 void *RMQueuePop(RMQueue_Handle *handle) {
-    if (handle->size == 0)
-        return 0;
-    void *tmp = handle->dataPtr[handle->head];
-    handle->head = (handle->head + 1) % handle->fifoSize;
-    handle->size--;
-    return tmp;
+    if (handle->size != 0) {
+        void *tmp = handle->dataPtr[handle->head];
+        handle->head = (handle->head + 1) % handle->fifoSize;
+        handle->size--;
+        return tmp;
+    } else return NULL;
 }
 
 void RMQueueDelete(RMQueue_Handle *handle) {

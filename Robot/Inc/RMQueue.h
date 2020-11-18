@@ -40,7 +40,17 @@ RM_Status RMQueueInit(RMQueue_Handle *handle, uint32_t typeSize, uint32_t depth)
 RM_Status RMQueuePush(RMQueue_Handle *handle, void *dataPtr);
 
 /**
- * @brief 弹出队列首元素
+ * @brief 得到队列首元素指针，但是不会更改队列长度
+ * @see RMQueuePop
+ * @param handle 队列句柄
+ * @return 队列首元素指针
+ */
+void *RMQueueTop(RMQueue_Handle *handle);
+
+/**
+ * @brief 弹出队列首元素指针，并更新队列长度
+ * @note 如果使用了{@link RMQueueGetEndPtr}则不应该用这个函数获取数据，应该使用{@link RMQueueTop}获取然数据，数据读取完成后使用该函数弹出首元素
+ * @see RMQueueTop RMQueueGetEndPtr
  * @param handle 队列句柄
  * @return 队列首元素指针
  */

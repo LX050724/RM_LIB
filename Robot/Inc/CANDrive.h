@@ -13,6 +13,7 @@
 
 #include "RMLibHead.h"
 #ifdef HAL_CAN_MODULE_ENABLED
+#include "can.h"
 
 /**
  * @brief can枚举

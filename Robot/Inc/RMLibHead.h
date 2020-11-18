@@ -12,7 +12,15 @@
  * </table>
  * @section Robomaster整合库
  *
- * <h1><a href="http://www.kdrobot.top/git/KDRobot_RM/RM_LIB">Git页面</a></h1>
+ * <h2><a href="http://www.kdrobot.top/git/KDRobot_RM/RM_LIB">Git页面</a></h2>
+ *
+ * 注意使用的HAL库的版本大于1.19.0,推荐1.24.x
+ *
+ * ## 配置方法
+ *
+ * 添加全局宏定义`__USE_RTOS`决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护以及巴特沃斯滤波器动态内存分配使用的函数</p>
+ * 添加全局宏定义`WatchDoglength`，并赋值看门狗最大数量启用看门狗</p>
+ * 添加全局宏定义`CAN2_SUPPORT`，启用CAN2支持</p>
  *
  * <table>
  * <tr><th>CAN底层驱动模块  <td>@see CANDrive.h @see CANDrive.c
@@ -68,7 +76,7 @@
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 #define RMLIB_ENTER_CRITICAL() taskENTER_CRITICAL()
-#define RMLIB_ENTER_CRITICAL() taskEXIT_CRITICAL()
+#define RMLIB_EXIT_CRITICAL() taskEXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) pvPortMalloc(SIZE)
 #define RMLIB_FREE(P) vPortFree(P)
 
@@ -76,7 +84,7 @@
 
 #include "stdlib.h"
 #define RMLIB_ENTER_CRITICAL()
-#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_EXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) malloc(SIZE)
 #define RMLIB_FREE(P) free(P)
 
@@ -86,7 +94,7 @@
 #include "stdint.h"
 #include "stdlib.h"
 #define RMLIB_ENTER_CRITICAL()
-#define RMLIB_ENTER_CRITICAL()
+#define RMLIB_EXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) malloc(SIZE)
 #define RMLIB_FREE(P) free(P)
 

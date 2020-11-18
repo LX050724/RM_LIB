@@ -2,7 +2,6 @@
 
 #ifdef HAL_CAN_MODULE_ENABLED
 
-#include "can.h"
 CAN_RxHeaderTypeDef CAN1_Rx;
 CAN_TxHeaderTypeDef CAN1_Tx;
 uint8_t CAN1_buff[8];
@@ -42,7 +41,7 @@ void CanFilter_Init(CAN_HandleTypeDef *hcan) {
         canfilter.FilterBank = 14;
 
         /* CAN_FilterFIFO1 */
-        canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO1;  // ;
+        canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO1;
     }
 #endif
 
@@ -52,7 +51,7 @@ void CanFilter_Init(CAN_HandleTypeDef *hcan) {
 }
 
 HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
-    CAN_ENTER_CRITICAL();
+    RMLIB_ENTER_CRITICAL();
 
     /* 标准标识符 */
     CAN1_Tx.StdId = StdId;
@@ -67,14 +66,14 @@ HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
     CAN1_Tx.TransmitGlobalTime = DISABLE;
 
     HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, (uint32_t *) CAN_TX_MAILBOX0);
-    CAN_EXIT_CRITICAL();
+    RMLIB_EXIT_CRITICAL();
     return err;
 }
 
 #ifdef CAN2_SUPPORT
 
 HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
-    CAN_ENTER_CRITICAL();
+    RMLIB_ENTER_CRITICAL();
 
     /* 标准标识符 */
     CAN2_Tx.StdId = StdId;
@@ -88,7 +87,7 @@ HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
     CAN2_Tx.DLC = 8;
     CAN2_Tx.TransmitGlobalTime = DISABLE;
     HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, (uint32_t *) CAN_TX_MAILBOX1);
-    CAN_EXIT_CRITICAL();
+    RMLIB_EXIT_CRITICAL();
     return err;
 }
 #endif
