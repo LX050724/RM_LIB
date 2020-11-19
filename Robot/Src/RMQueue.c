@@ -1,7 +1,7 @@
 #include "RMQueue.h"
 
 RM_Status RMQueueInit(RMQueue_Handle *handle, uint32_t typeSize, uint32_t depth) {
-    handle->dataPtr = RMLIB_MALLOC(sizeof(void **) * depth);
+    handle->dataPtr = (void **) RMLIB_MALLOC(sizeof(void **) * depth);
     if (handle->dataPtr == NULL) return RM_ERROR;
     for (int i = 0; i < depth; i++) {
         handle->dataPtr[i] = RMLIB_MALLOC(typeSize);
@@ -51,7 +51,7 @@ void RMQueueDelete(RMQueue_Handle *handle) {
 }
 
 void *RMQueueGetEndPtr(RMQueue_Handle *handle) {
-    if (handle->Lock == 0) {
+    if (handle->size < handle->fifoSize && handle->Lock == 0) {
         handle->Lock = 1;
         return handle->dataPtr[handle->end];
     } else return NULL;
