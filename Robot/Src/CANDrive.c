@@ -52,6 +52,7 @@ void CanFilter_Init(CAN_HandleTypeDef *hcan) {
 
 HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
     RMLIB_ENTER_CRITICAL();
+    uint32_t mailbox;
 
     /* 标准标识符 */
     CAN1_Tx.StdId = StdId;
@@ -65,7 +66,7 @@ HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
     CAN1_Tx.DLC = 8;
     CAN1_Tx.TransmitGlobalTime = DISABLE;
 
-    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, (uint32_t *) CAN_TX_MAILBOX0);
+    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, &mailbox);
     RMLIB_EXIT_CRITICAL();
     return err;
 }
@@ -74,6 +75,7 @@ HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
 
 HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
     RMLIB_ENTER_CRITICAL();
+    uint32_t mailbox;
 
     /* 标准标识符 */
     CAN2_Tx.StdId = StdId;
@@ -86,7 +88,7 @@ HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
 
     CAN2_Tx.DLC = 8;
     CAN2_Tx.TransmitGlobalTime = DISABLE;
-    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, (uint32_t *) CAN_TX_MAILBOX1);
+    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, &mailbox);
     RMLIB_EXIT_CRITICAL();
     return err;
 }
