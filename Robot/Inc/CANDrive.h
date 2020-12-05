@@ -48,7 +48,7 @@ HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg);
  * @return HAL Status structures definition
  */
 static inline HAL_StatusTypeDef CAN1_Receive_Msg(uint8_t *buf) {
-    return HAL_CAN_GetRxMessage(&hcan1, CAN_FilterFIFO0, &CAN1_Rx, buf);
+    return HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &CAN1_Rx, buf);
 }
 
 #ifdef CAN2_SUPPORT
@@ -69,8 +69,8 @@ HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg);
  * @param[out] buf 数据缓冲区
  * @return HAL Status structures definition
  */
-inline HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf){
-    return HAL_CAN_GetRxMessage(&hcan2, CAN_FilterFIFO1, &CAN2_Rx, buf);
+static inline HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf){
+    return HAL_CAN_GetRxMessage(&hcan2, CAN_RX_FIFO1, &CAN2_Rx, buf);
 }
 
 #endif //CAN2_SUPPORT
