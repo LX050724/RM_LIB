@@ -2,16 +2,11 @@
 
 #ifdef HAL_CAN_MODULE_ENABLED
 
-CAN_RxHeaderTypeDef CAN1_Rx;
-CAN_TxHeaderTypeDef CAN1_Tx;
 uint8_t CAN1_buff[8];
 
-#ifdef CAN2_SUPPORT
-CAN_RxHeaderTypeDef CAN2_Rx;
-CAN_TxHeaderTypeDef CAN2_Tx;
+#if defined(CAN2)
 uint8_t CAN2_buff[8];
 #endif
-
 
 void CanFilter_Init(CAN_HandleTypeDef *hcan) {
     CAN_FilterTypeDef canfilter;
@@ -35,7 +30,8 @@ void CanFilter_Init(CAN_HandleTypeDef *hcan) {
         /* CAN_FilterFIFO0 */
         canfilter.FilterFIFOAssignment = CAN_FILTER_FIFO0;
     }
-#ifdef CAN2_SUPPORT
+
+#if defined(CAN2)
     if (hcan->Instance == CAN2) {
         /* 从can的过滤器编号 */
         canfilter.FilterBank = 14;
@@ -50,47 +46,33 @@ void CanFilter_Init(CAN_HandleTypeDef *hcan) {
     HAL_CAN_ConfigFilter(hcan, &canfilter);
 }
 
-HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg) {
+HAL_StatusTypeDef CAN_Send_StdDataFrame(CAN_HandleTypeDef *hcan, uint32_t StdId, uint8_t *msg) {
     RMLIB_ENTER_CRITICAL();
-    uint32_t mailbox;
 
-    /* 标准标识符 */
-    CAN1_Tx.StdId = StdId;
+    CAN_TxHeaderTypeDef CAN_Tx = {
+            .StdId = StdId,                 //标准标识符
+            .ExtId = 0,
+            .IDE = CAN_ID_STD,              //使用标准帧
+            .RTR = CAN_RTR_DATA,            //数据帧
+            .DLC = 8,
+            .TransmitGlobalTime = DISABLE,
+            };
 
-    /* 使用标准帧 */
-    CAN1_Tx.IDE = CAN_ID_STD;
+    uint32_t TxMailbox = 0;
 
-    /* 数据帧 */
-    CAN1_Tx.RTR = CAN_RTR_DATA;
-
-    CAN1_Tx.DLC = 8;
-    CAN1_Tx.TransmitGlobalTime = DISABLE;
-
-    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan1, &CAN1_Tx, msg, &mailbox);
+    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(hcan, &CAN_Tx, msg, &TxMailbox);
     RMLIB_EXIT_CRITICAL();
     return err;
 }
 
-#ifdef CAN2_SUPPORT
+uint32_t CAN_Receive_DataFrame(CAN_HandleTypeDef *hcan, uint8_t *buf) {
+    CAN_RxHeaderTypeDef CAN_Rx = { 0 };
+    HAL_CAN_GetRxMessage(hcan, (hcan->Instance == CAN1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1, &CAN_Rx, buf);
 
-HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg) {
-    RMLIB_ENTER_CRITICAL();
-    uint32_t mailbox;
-
-    /* 标准标识符 */
-    CAN2_Tx.StdId = StdId;
-
-    /* 使用标准帧 */
-    CAN2_Tx.IDE = CAN_ID_STD;
-
-    /* 数据帧 */
-    CAN2_Tx.RTR = CAN_RTR_DATA;
-
-    CAN2_Tx.DLC = 8;
-    CAN2_Tx.TransmitGlobalTime = DISABLE;
-    HAL_StatusTypeDef err = HAL_CAN_AddTxMessage(&hcan2, &CAN2_Tx, msg, &mailbox);
-    RMLIB_EXIT_CRITICAL();
-    return err;
+    if(CAN_Rx.IDE == CAN_ID_STD)
+        return CAN_Rx.StdId;
+    else
+        return CAN_Rx.ExtId;
 }
-#endif
+
 #endif

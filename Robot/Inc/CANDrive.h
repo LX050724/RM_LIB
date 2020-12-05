@@ -15,65 +15,34 @@
 #ifdef HAL_CAN_MODULE_ENABLED
 #include "can.h"
 
-/**
- * @brief can枚举
- */
-typedef enum
-{
-    can1 = 1,   //!<@brief CAN1标志
-    can2 = 2,   //!<@brief CAN2标志
-}can_num_e;
-
-extern CAN_RxHeaderTypeDef CAN1_Rx; //!<@brief CAN1接收句柄
-extern CAN_TxHeaderTypeDef CAN1_Tx; //!<@brief CAN1发送句柄
 extern uint8_t CAN1_buff[8];        //!<@brief CAN1接收缓冲区
 
+#if defined(CAN2)
+extern uint8_t CAN2_buff[8];        //!<@brief CAN2接收缓冲区
+#endif
+
 /**
- * @brief  按照通常设置初始化CAN滤波器
- * @param[in] hcan CAN handle Structure definition
+ * @brief 按照通常设置初始化CAN滤波器
+ * @param hcan CAN handle Structure definition
  */
 void CanFilter_Init(CAN_HandleTypeDef* hcan);
 
 /**
- * @brief CAN1发送标准帧数据
+ * @brief CAN发送标准帧数据
+ * @param hcan CAN句柄
  * @param[in] StdId 标准帧ID
  * @param[in] msg 数据数组,长度为8
  * @return HAL Status structures definition
  */
-HAL_StatusTypeDef CAN1_Send_Msg(uint32_t StdId, uint8_t *msg);
+HAL_StatusTypeDef CAN_Send_StdDataFrame(CAN_HandleTypeDef *hcan, uint32_t StdId, uint8_t *msg);
 
 /**
- * @brief CAN1读取数据
+ * @brief CAN读取数据
+ * @param hcan CAN句柄
  * @param[out] buf 数据缓冲区
- * @return HAL Status structures definition
+ * @return 标准帧ID或拓展帧ID
  */
-static inline HAL_StatusTypeDef CAN1_Receive_Msg(uint8_t *buf) {
-    return HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &CAN1_Rx, buf);
-}
-
-#ifdef CAN2_SUPPORT
-extern CAN_RxHeaderTypeDef CAN2_Rx;  //!<@brief CAN2接收句柄
-extern CAN_TxHeaderTypeDef CAN2_Tx;  //!<@brief CAN2发送句柄
-extern uint8_t CAN2_buff[8];         //!<@brief CAN2接收缓冲区
-
-/**
- * @brief CAN2发送标准帧数据
- * @param[in] StdId 标准帧ID
- * @param[in] msg 数据数组,长度为8
- * @return HAL Status structures definition
- */
-HAL_StatusTypeDef CAN2_Send_Msg(uint32_t StdId, uint8_t *msg);
-
-/**
- * @brief CAN2读取数据
- * @param[out] buf 数据缓冲区
- * @return HAL Status structures definition
- */
-static inline HAL_StatusTypeDef CAN2_Receive_Msg(uint8_t *buf){
-    return HAL_CAN_GetRxMessage(&hcan2, CAN_RX_FIFO1, &CAN2_Rx, buf);
-}
-
-#endif //CAN2_SUPPORT
+uint32_t CAN_Receive_DataFrame(CAN_HandleTypeDef *hcan, uint8_t *buf);
 
 #endif //HAL_CAN_MODULE_ENABLED
 

@@ -20,7 +20,6 @@
  *
  * 添加全局宏定义`__USE_RTOS`决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护以及巴特沃斯滤波器动态内存分配使用的函数</p>
  * 添加全局宏定义`WatchDoglength`，并赋值看门狗最大数量启用看门狗</p>
- * 添加全局宏定义`CAN2_SUPPORT`，启用CAN2支持</p>
  *
  * <table>
  * <tr><th>CAN底层驱动模块  <td>@see CANDrive.h @see CANDrive.c
@@ -39,6 +38,8 @@
 
 #ifndef _RMLIBHEAD_H
 #define _RMLIBHEAD_H
+
+#define RM_LIB_VERSION 20201205
 
 #if defined(__ARMCC_VERSION)
 #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || \

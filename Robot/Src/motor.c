@@ -103,7 +103,7 @@ void M2006_Receive(M2006_TypeDef *Dst, uint8_t *Data) {
     Dst->LsatAngle = Dst->MchanicalAngle;
 }
 
-HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data) {
+HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Data) {
     uint8_t temp[8];
     temp[0] = (uint8_t)(Data[0] >> 8);
     temp[1] = (uint8_t)(Data[0] & 0xff);
@@ -113,14 +113,7 @@ HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data) {
     temp[5] = (uint8_t)(Data[2] & 0xff);
     temp[6] = (uint8_t)(Data[3] >> 8);
     temp[7] = (uint8_t)(Data[3] & 0xff);
-    if (can == can1)
-        return CAN1_Send_Msg(STD_ID, temp);
-#ifdef CAN2_SUPPORT
-        else if (can == can2)
-            return CAN2_Send_Msg(STD_ID, temp);
-#endif
-    else
-        return HAL_ERROR;
+    return CAN_Send_StdDataFrame(hcan, StdId, temp);
 }
 
 #endif

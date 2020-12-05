@@ -37,7 +37,7 @@ typedef struct {
         float sc;               //!<@brief 速度,转矩电流乘积项系数
         float cc;               //!<@brief 转矩电流平方项系数
         float constant;         //!<@brief 常量
-    } PowerCOF;                  //!<@brief 计算功率所用的系数,由MATLAB拟合
+    } PowerCOF;                 //!<@brief 计算功率所用的系数,由MATLAB拟合
 } RM3508_TypeDef;
 
 /**
@@ -160,12 +160,12 @@ void GM3510_Receive(GM3510_TypeDef *Dst, uint8_t *Data);
 
 /**
  * @brief 发送电机控制信号
- * @param[in] can CAN枚举
- * @param[in] STD_ID 标准帧ID
+ * @param hcan CAN句柄
+ * @param[in] StdId 标准帧ID
  * @param[in] Data 电机控制信号数组指针
  * @return HAL Status structures definition
  */
-HAL_StatusTypeDef MotorSend(can_num_e can, uint32_t STD_ID, int16_t *Data);
+HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Data);
 
 /**
  * @brief 寻找最短归中路径
