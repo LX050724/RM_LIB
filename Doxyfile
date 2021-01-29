@@ -563,7 +563,7 @@ CASE_SENSE_NAMES       = NO
 # scope will be hidden.
 # The default value is: NO.
 
-HIDE_SCOPE_NAMES       = YES
+HIDE_SCOPE_NAMES       = NO
 
 # If the HIDE_COMPOUND_REFERENCE tag is set to NO (default) then doxygen will
 # append additional text to a page's title, such as Class Reference. If set to
@@ -1194,7 +1194,6 @@ HTML_FILE_EXTENSION    = .html
 #
 # To get valid HTML the header file that includes any scripts and style sheets
 # that doxygen needs, which is dependent on the configuration options used (e.g.
-
 # the setting GENERATE_TREEVIEW). It is highly recommended to start with a
 # default header using
 # doxygen -w html new_header.html new_footer.html new_stylesheet.css
@@ -2208,6 +2207,7 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = HAL_CAN_MODULE_ENABLED \
                          CAN2_SUPPORT \
+                         CAN2 \
                          WatchDoglength=10
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this

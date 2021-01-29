@@ -33,6 +33,8 @@
  * <tr><th>遥控器模块  <td>@see remote.h @see remote.c
  * <tr><th>队列模块  <td>@see RMQueue.h @see RMQueue.c
  * <tr><th>软件看门狗模块头  <td>@see WatchDog.h @see WatchDog.c
+ * <tr><th>虚拟串口通信模块  <td>@see VCOMCOMM.h @see VCOMCOMM.c
+ * <tr><th>CRC校验模块  <td>@see CRC.h @see CRC.c
  * </table>
  */
 
