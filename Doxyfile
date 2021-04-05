@@ -2208,7 +2208,8 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = HAL_CAN_MODULE_ENABLED \
                          CAN2_SUPPORT \
                          CAN2 \
-                         WatchDoglength=10
+                         WatchDoglength=10 \
+                         HAL_PCD_MODULE_ENABLED
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
