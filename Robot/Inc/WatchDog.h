@@ -53,10 +53,7 @@ void FeedDog_CallBack(WatchDogp handle);
  * @brief 喂狗函数
  * @param[in] handle 看门狗结构体指针
  */
-inline void Feed_Dog(WatchDogp handle) {
-    handle->Life = 0;
-    FeedDog_CallBack(handle);
-}
+void Feed_Dog(WatchDogp handle);
 
 #endif
 

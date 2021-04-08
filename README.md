@@ -1,6 +1,6 @@
 # RM_LIB —— Robomaster整合库
 
-***！！！README文档不再更新，详细参见 [Doxygen在线文档](http://oss.kdrobot.top/Doxygen/RM_LIB/html/index.html)！！！***
+***！！！README文档不再更新，详细参见 [Doxygen在线文档](http://www.kdrobot.top/html/doxygen/RM_LIB/html/index.html)！！！***
 
 注意使用的HAL库的版本大于1.19.0,推荐1.24.x
 

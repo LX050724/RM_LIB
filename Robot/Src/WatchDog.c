@@ -40,6 +40,11 @@ void WatchDog_Init(WatchDogp handle, uint32_t Life) {
     List[Len++] = handle;
 }
 
+void Feed_Dog(WatchDogp handle) {
+    handle->Life = 0;
+    FeedDog_CallBack(handle);
+}
+
 __weak void FeedDog_CallBack(WatchDogp handle) {
     UNUSED(handle);
 }
