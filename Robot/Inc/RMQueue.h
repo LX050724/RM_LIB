@@ -12,6 +12,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 typedef struct {
     void **dataPtr;
     uint32_t typeSize;
@@ -106,5 +108,7 @@ inline uint32_t RMQueueSize(RMQueue_Handle *handle) {
 inline RM_Status RMQueueIsEmpty(RMQueue_Handle *handle) {
     return handle->size == 0 ? RM_YES : RM_NO;
 }
+
+RMLIB_CPP_END
 
 #endif

@@ -10,6 +10,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 #define RC_FRAME_LENGTH 18u
 #define REMOTE_CONTROLLER_STICK_OFFSET 1024
 
@@ -111,5 +113,7 @@ void MouseKeyControlProcess(Mouse *mouse, Key_t key, Key_t Lastkey);
  * @brief 停止模式控制回调函数
  */
 void STOPControlProcess(void);
+
+RMLIB_CPP_END
 
 #endif

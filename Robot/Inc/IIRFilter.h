@@ -17,6 +17,10 @@
 
 #include "stdint.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief IIR滤波器结构体
  */
@@ -51,5 +55,9 @@ float IIRFilter(IIRFilter_t *filter, float input);
  * @param filter IIR滤波器
  */
 void IIRFilterDelete(IIRFilter_t *filter);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //BUTTERWORTHFILTER_BUTTERWORTHFILTERIIR_H

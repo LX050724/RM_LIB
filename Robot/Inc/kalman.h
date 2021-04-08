@@ -24,6 +24,10 @@
 #ifndef _KALMAN_H
 #define _KALMAN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief 一阶卡尔曼滤波器
  */
@@ -56,5 +60,9 @@ void kalman_Init(kalman_filter_t *p, float T_Q, float T_R);
   * @retval 滤波后的信号
   */
 float Kalman_Filter(kalman_filter_t *p, float dat);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

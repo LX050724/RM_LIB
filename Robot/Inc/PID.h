@@ -8,6 +8,10 @@
 #ifndef _PID_H_
 #define _PID_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief 限幅宏函数
  * @param IN 限幅变量
@@ -85,5 +89,9 @@ void PID_Control_Smis(float current, float expected, PID_Smis *data, float speed
  * @return PID增量
  */
 float PID_Increment(float current, float expect, PID_ADD *parameter);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

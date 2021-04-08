@@ -9,6 +9,9 @@
 #define _MOTOR_H_
 
 #include "RMLibHead.h"
+
+RMLIB_CPP_BEGIN
+
 #ifdef HAL_CAN_MODULE_ENABLED
 #include "CANDrive.h"
 
@@ -194,4 +197,7 @@ inline int16_t QuickCentering(uint16_t Mch, uint16_t Mid) {
 }
 
 #endif
+
+RMLIB_CPP_END
+
 #endif

@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Descriptions: CRC8 Verify function
  * @param pchMessage Data to Verify
@@ -19,5 +23,9 @@ uint8_t Verify_CRC8_Check_Sum(uint8_t *pchMessage, uint8_t dwLength);
  * @return True or False (CRC Verify Result)
  */
 uint16_t Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,8 +1,6 @@
 #include "ramp.h"
 
-__weak uint32_t
-
-Get_TimerTick() {
+__weak uint32_t Get_TimerTick() {
     return HAL_GetTick();
 }
 

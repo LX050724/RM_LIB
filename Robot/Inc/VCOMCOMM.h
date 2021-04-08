@@ -3,6 +3,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 #ifdef HAL_PCD_MODULE_ENABLED
 
 /**
@@ -40,4 +42,7 @@ void VCOMM_CallBack(uint8_t fun_code, uint16_t id, uint8_t *data, uint8_t len);
 void VCOMM_Error_CallBack(uint8_t *data, uint8_t len);
 
 #endif
+
+RMLIB_CPP_END
+
 #endif

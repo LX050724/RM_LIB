@@ -35,13 +35,24 @@
  * <tr><th>软件看门狗模块头  <td>@see WatchDog.h @see WatchDog.c
  * <tr><th>虚拟串口通信模块  <td>@see VCOMCOMM.h @see VCOMCOMM.c
  * <tr><th>CRC校验模块  <td>@see CRC.h @see CRC.c
+ * <tr><th>串口printf缓冲区模块  <td>@see PrintfDMABuffer.h @see PrintfDMABuffer.c
  * </table>
  */
 
 #ifndef _RMLIBHEAD_H
 #define _RMLIBHEAD_H
 
-#define RM_LIB_VERSION 20201205
+#ifdef __cplusplus
+    #define RMLIB_CPP_BEGIN extern "C" {
+    #define RMLIB_CPP_END }
+#else
+    #define RMLIB_CPP_BEGIN
+    #define RMLIB_CPP_END
+#endif
+
+#define RM_LIB_VERSION 20210408
+
+RMLIB_CPP_BEGIN
 
 #if defined(__ARMCC_VERSION)
 #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || \
@@ -113,5 +124,7 @@ typedef enum {
     RM_NO = RM_ERROR,
     RM_DISABLE = RM_ERROR,
 } RM_Status;
+
+RMLIB_CPP_END
 
 #endif //_RMLIBHEAD_H

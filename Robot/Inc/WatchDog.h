@@ -12,6 +12,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 /**
  * @brief 看门狗结构体
  */
@@ -57,4 +59,7 @@ inline void Feed_Dog(WatchDogp handle) {
 }
 
 #endif
+
+RMLIB_CPP_END
+
 #endif

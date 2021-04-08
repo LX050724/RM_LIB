@@ -10,6 +10,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 /**
  * @brief 矢量速度结构体
  */
@@ -49,5 +51,7 @@ void ChassisMotorSpeedClean(ChassisSpeed_Ref_t *ref);
  * @param[in] ref 矢量速度结构体
  */
 __weak void PID_Expect(Chassis_Motor_Speed *motor, ChassisSpeed_Ref_t *ref);
+
+RMLIB_CPP_END
 
 #endif

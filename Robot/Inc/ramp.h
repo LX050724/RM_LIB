@@ -13,6 +13,8 @@
 
 #include "RMLibHead.h"
 
+RMLIB_CPP_BEGIN
+
 /**
  * @brief 斜坡函数结构体
  * @note  定义时应初始化斜坡时间RampTime为指定的时间
@@ -44,5 +46,7 @@ float Slope(Ramp_Typedef *Ramp);
 inline void ResetSlope(Ramp_Typedef *Ramp) {
     Ramp->flag = 0;
 }
+
+RMLIB_CPP_END
 
 #endif
