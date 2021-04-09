@@ -55,8 +55,8 @@ void FeedDog_CallBack(WatchDogp handle);
  */
 void Feed_Dog(WatchDogp handle);
 
-#endif
-
 RMLIB_CPP_END
+
+#endif
 
 #endif

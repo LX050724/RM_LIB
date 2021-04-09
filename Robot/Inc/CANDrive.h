@@ -11,10 +11,9 @@
 #ifndef _CANDrive_H_
 #define _CANDrive_H_
 
-RMLIB_CPP_BEGIN
-
-#include "RMLibHead.h"
 #ifdef HAL_CAN_MODULE_ENABLED
+#include "RMLibHead.h"
+RMLIB_CPP_BEGIN
 #include "can.h"
 
 extern uint8_t CAN1_buff[8];        //!<@brief CAN1接收缓冲区
@@ -46,8 +45,8 @@ HAL_StatusTypeDef CAN_Send_StdDataFrame(CAN_HandleTypeDef *hcan, uint32_t StdId,
  */
 uint32_t CAN_Receive_DataFrame(CAN_HandleTypeDef *hcan, uint8_t *buf);
 
-#endif //HAL_CAN_MODULE_ENABLED
-
 RMLIB_CPP_END
+
+#endif //HAL_CAN_MODULE_ENABLED
 
 #endif //_CANDrive_H_
