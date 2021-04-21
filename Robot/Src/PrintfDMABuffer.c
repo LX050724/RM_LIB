@@ -38,8 +38,7 @@ int fputc(int ch, FILE *f) {
 #else
             while (hpb->huart->gState != HAL_UART_STATE_READY);
 #endif
-            uint8_t f = PushBuffer(hpb, ch);
-            if (ch == '\n' || f)
+            if (PushBuffer(hpb, ch) || ch == '\n')
                 PrintBufferFlush(hpb);
             RMLIB_EXIT_CRITICAL();
         }

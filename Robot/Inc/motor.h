@@ -33,8 +33,8 @@ typedef struct {
     float Power;                //!<@brief 功率
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
     int16_t r;                  //!<@brief 圈数
-    int32_t Angle;              //!<@brief 连续化机械角度
-    float Angle_DEG;            //!<@brief 连续化角度制角度
+    int32_t Angle;              //!<@brief 连续化机械角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
+    float Angle_DEG;            //!<@brief 连续化角度制角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
     struct PowerCOF_s {
         float ss;               //!<@brief 速度平方项系数
         float sc;               //!<@brief 速度,转矩电流乘积项系数
@@ -53,8 +53,8 @@ typedef struct {
     uint8_t temp;               //!<@brief 温度
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
     int16_t r;                  //!<@brief 圈数
-    int32_t Angle;              //!<@brief 连续化机械角度
-    float Angle_DEG;            //!<@brief 连续化角度制角度
+    int32_t Angle;              //!<@brief 连续化机械角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
+    float Angle_DEG;            //!<@brief 连续化角度制角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
 } GM6020_TypeDef;
 
 /**
@@ -73,8 +73,8 @@ typedef struct {
     int16_t OutputTorque;       //!<@brief 输出扭矩
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
     int16_t r;                  //!<@brief 圈数
-    int32_t Angle;              //!<@brief 连续化机械角度
-    float Angle_DEG;            //!<@brief 连续化角度制角度
+    int32_t Angle;              //!<@brief 连续化机械角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
+    float Angle_DEG;            //!<@brief 连续化角度制角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
 } GM3510_TypeDef;
 
 /**
@@ -85,8 +85,8 @@ typedef struct {
     int16_t Speed;              //!<@brief 转速
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
     int16_t r;                  //!<@brief 圈数
-    int32_t Angle;              //!<@brief 连续化机械角度
-    float Angle_DEG;            //!<@brief 连续化角度制角度
+    int32_t Angle;              //!<@brief 连续化机械角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
+    float Angle_DEG;            //!<@brief 连续化角度制角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
 } M2006_TypeDef;
 
 /**
@@ -98,8 +98,8 @@ typedef struct {
     int16_t SetTorqueCurrent;   //!<@brief 设定转矩电流
     uint16_t LsatAngle;         //!<@brief 上一次的机械角度
     int16_t r;                  //!<@brief 圈数
-    int32_t Angle;              //!<@brief 连续化机械角度
-    float Angle_DEG;            //!<@brief 连续化角度制角度
+    int32_t Angle;              //!<@brief 连续化机械角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
+    float Angle_DEG;            //!<@brief 连续化角度制角度 @warning 由于启动时角度不确定，启动时连续化角度可能有一圈的偏差
 } RM6623_TypeDef;
 
 /**
@@ -183,7 +183,7 @@ HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Da
  *          0       Mid            Mid_    8191
  *
  *      使用方法：
- *          作为将返回值直接作为PID实际值，期望为普通的中值</tr>
+ *          将返回值直接作为PID实际值，期望为普通的中值</tr>
  * @param[in] Mch 电机机械角度
  * @param[in] Mid 归中中值
  * @return 映射过的机械角度
