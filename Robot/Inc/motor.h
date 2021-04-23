@@ -188,13 +188,7 @@ HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Da
  * @param[in] Mid 归中中值
  * @return 映射过的机械角度
  */
-inline int16_t QuickCentering(uint16_t Mch, uint16_t Mid) {
-    uint16_t Mid_ = (Mid + 4095) % 8192;
-    if (Mid_ < Mid)
-        return Mch < Mid_ ? Mch + 8192 : Mch;
-    else
-        return Mch > Mid_ ? Mch - 8192 : Mch;
-}
+int16_t QuickCentering(uint16_t Mch, uint16_t Mid);
 
 #endif
 
