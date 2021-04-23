@@ -33,14 +33,14 @@ typedef struct {
 
 /**
  * @brief 初始化缓冲区句柄
- * @details 首先检查huart是否是NULL，如果是，返回错误
- *          不是NULL继续检查缓冲区长度，详见bufferLen
- *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符
+ * @details 首先检查huart是否是NULL，如果是，返回错误  
+ *          不是NULL继续检查缓冲区长度，详见bufferLen  
+ *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符  
  * @param hpb 缓冲区句柄指针
  * @param huart 重定向目的串口
- * @param bufferLen 缓冲区长度
- *                  如果缓冲区长度 <= 1，则不使用缓冲区，直接使用串口普通发送输出，也不会检查串口有没有启用TxDMA
- *                  如果缓冲区长度 > 1，程序会分配相应大小的缓冲区，并且会检查串口有没有启用TxDMA
+ * @param bufferLen 缓冲区长度  
+ *                  如果缓冲区长度 <= 1，则不使用缓冲区，直接使用串口普通发送输出，也不会检查串口有没有启用TxDMA  
+ *                  如果缓冲区长度 > 1，程序会分配相应大小的缓冲区，并且会检查串口有没有启用TxDMA  
  * @return 是否初始化成功
  */
 RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef *huart, uint32_t bufferLen);

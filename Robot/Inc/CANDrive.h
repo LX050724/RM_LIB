@@ -11,9 +11,12 @@
 #ifndef _CANDrive_H_
 #define _CANDrive_H_
 
-#ifdef HAL_CAN_MODULE_ENABLED
 #include "RMLibHead.h"
+
+#ifdef HAL_CAN_MODULE_ENABLED
+
 RMLIB_CPP_BEGIN
+
 #include "can.h"
 
 extern uint8_t CAN1_buff[8];        //!<@brief CAN1接收缓冲区
