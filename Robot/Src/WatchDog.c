@@ -11,20 +11,13 @@
 
 #if defined(WatchDoglength) && WatchDoglength > 0
 
-extern volatile uint32_t uwTick;
-extern HAL_TickFreqTypeDef uwTickFreq;
-
 /*!@brief 看门狗列表*/
 static WatchDogp List[WatchDoglength];
 
 /*!@brief 看门狗长度*/
 static uint16_t Len = 0;
 
-/**
- * @brief 重写HAL_IncTick函数实现看门狗轮询
- */
-void HAL_IncTick(void) {
-    uwTick += uwTickFreq;
+void WatchDog_Polling(void) {
     for (uint8_t i = 0; i < Len; ++i) {
         List[i]->Life++;
         if (List[i]->Life > List[i]->Max) {
