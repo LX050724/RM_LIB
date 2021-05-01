@@ -171,24 +171,24 @@ void GM3510_Receive(GM3510_TypeDef *Dst, uint8_t *Data);
 HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Data);
 
 /**
- * @brief 寻找最短归中路径
+ * @brief 寻找最短到达路径
  * @details
- *      <tr>输入中值和电机机械角度，函数会将机械角度处理成为以中值为中心的值，并且是绝对的</p>
- *      其中Mid_是中值的对称点
+ *      <tr>输入期望值和电机机械角度，函数会将期望值处理成为机械角度为中心的值，并且是绝对的</p>
+ *      其中Exp_是期望值的对称点
  *      归中方向示意图:
  *
  *          || <<<<< | >>>>>>>>>>>> | <<<<< ||
- *          0       Mid_           Mid     8191
+ *          0       Exp_           Exp     8191
  *          || >>>>> | <<<<<<<<<<<< | >>>>> ||
- *          0       Mid            Mid_    8191
+ *          0       Exp            Exp_    8191
  *
  *      使用方法：
- *          将返回值直接作为PID实际值，期望为普通的中值</tr>
+ *          将返回值直接作为PID期望，实际值为电机编码值</tr>
  * @param[in] Mch 电机机械角度
- * @param[in] Mid 归中中值
- * @return 映射过的机械角度
+ * @param[in] Exp 期望值
+ * @return 映射过的期望值
  */
-int16_t QuickCentering(uint16_t Mch, uint16_t Mid);
+int16_t QuickCentering(uint16_t Mch, uint16_t Exp);
 
 #endif
 

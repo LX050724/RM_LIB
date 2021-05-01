@@ -116,12 +116,12 @@ HAL_StatusTypeDef MotorSend(CAN_HandleTypeDef *hcan, uint32_t StdId, int16_t *Da
     return CAN_Send_StdDataFrame(hcan, StdId, temp);
 }
 
-int16_t QuickCentering(uint16_t Mch, uint16_t Mid) {
-    uint16_t Mid_ = (Mid + 4095) % 8192;
-    if (Mid_ < Mid)
-        return Mch < Mid_ ? Mch + 8192 : Mch;
+int16_t QuickCentering(uint16_t Mch, uint16_t Exp) {
+    uint16_t Exp_ = (Exp + 4095) % 8192;
+    if (Exp_ < Exp)
+        return Mch < Exp_ ? Exp - 8192 : Exp;
     else
-        return Mch > Mid_ ? Mch - 8192 : Mch;
+        return Mch > Exp_ ? Exp + 8192 : Exp;
 }
 
 #endif
