@@ -25,8 +25,8 @@
 RMLIB_CPP_BEGIN
 
 #if !defined(ARM_MATH_CM4) && !defined(ARM_MATH_CM3) && !defined(ARM_MATH_CM7)
-#error "No DSP library support"
-#endif
+#warning "No DSP library support, kalmanII not enable"
+#else
 
 #include "arm_math.h"
 
@@ -70,5 +70,7 @@ void kalmanII_Init(kalman_filterII_t *I);
 float *KalmanII_Filter(kalman_filterII_t *I, float signal1, float signal2);
 
 RMLIB_CPP_END
+
+#endif
 
 #endif

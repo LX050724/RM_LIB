@@ -50,11 +50,11 @@
     #define RMLIB_CPP_END
 #endif
 
-#define RM_LIB_VERSION 20210408
+#define RM_LIB_VERSION 20210612
 
 RMLIB_CPP_BEGIN
 
-#if defined(__ARMCC_VERSION)
+#if defined(__ARMCC_VERSION) || defined(__GNUC__)
 #if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || \
     defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || \
     defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || \
@@ -89,8 +89,9 @@ RMLIB_CPP_BEGIN
 
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
-#define RMLIB_ENTER_CRITICAL() taskENTER_CRITICAL()
-#define RMLIB_EXIT_CRITICAL() taskEXIT_CRITICAL()
+#include "task.h"
+#define RMLIB_ENTER_CRITICAL() vPortEnterCritical()
+#define RMLIB_EXIT_CRITICAL() vPortExitCritical()
 #define RMLIB_MALLOC(SIZE) pvPortMalloc(SIZE)
 #define RMLIB_FREE(P) vPortFree(P)
 

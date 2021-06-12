@@ -6,9 +6,12 @@
  */
 
 #include "PrintfDMABuffer.h"
+#include <stdio.h>
 
-FILE __stdout = { NULL };
-FILE __stderr = { NULL };
+#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED)
+
+FILE __stdout = {0};
+FILE __stderr = {0};
 
 /**
  * @brief 内部函数，将字符压入缓冲区中
@@ -16,23 +19,24 @@ FILE __stderr = { NULL };
  * @param ch 字符
  * @return 1：缓冲区满，需要刷新；0：缓冲区未满
  */
-static uint8_t PushBuffer(PrintDMABuffer_HandleTypeDef* hpb, int ch);
+static uint8_t PushBuffer(PrintDMABuffer_HandleTypeDef *hpb, int ch);
 
 void _sys_exit(int x) {
     x = x;
 }
 
 int fputc(int ch, FILE *f) {
-    if (f->handle != NULL) {
+    if (f->handle != 0) {
         RMLIB_ENTER_CRITICAL();
         PrintDMABuffer_HandleTypeDef *hpb = (PrintDMABuffer_HandleTypeDef *) f->handle;
-        if (hpb->bufferSize == 1) {
-            HAL_UART_Transmit(hpb->huart, (uint8_t *)&ch, 1, 10);
+        if (hpb->bufferSize <= 1) {
+            HAL_UART_Transmit(hpb->huart, (uint8_t *) &ch, 1, 10);
+            RMLIB_EXIT_CRITICAL();
         } else {
 #ifdef __USE_RTOS
             if (hpb->huart->gState != HAL_UART_STATE_READY) {
                 RMLIB_EXIT_CRITICAL();
-                while(hpb->huart->gState != HAL_UART_STATE_READY);
+                while (hpb->huart->gState != HAL_UART_STATE_READY);
                 RMLIB_ENTER_CRITICAL();
             }
 #else
@@ -46,12 +50,33 @@ int fputc(int ch, FILE *f) {
     return ch;
 }
 
-FILE PrintBufferRedirect(PrintDMABuffer_HandleTypeDef* hpb) {
+#ifdef __GNUC__
+
+int _write(int fd, const void *buffer, unsigned int count) {
+    FILE *f = NULL;
+    switch (fd) {
+        case 1:
+            f = &__stdout;
+            break;
+        case 2:
+            f = &__stderr;
+            break;
+        default:
+            return -1;
+    }
+    for (int i = 0; i < count; i++)
+        fputc((int) ((char *) buffer)[i], f);
+    return count;
+}
+
+#endif
+
+FILE PrintBufferRedirect(PrintDMABuffer_HandleTypeDef *hpb) {
     FILE t = {(int) hpb};
     return t;
 }
 
-RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef *huart, uint32_t bufferLen) {
+RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef *hpb, UART_HandleTypeDef *huart, uint32_t bufferLen) {
     if (huart == NULL) {
         /** Error: huart is Null*/
         return RM_ERROR;
@@ -76,20 +101,20 @@ RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef 
     return RM_SUCCESS;
 }
 
-void PrintBufferDeInit(PrintDMABuffer_HandleTypeDef* hpb) {
+void PrintBufferDeInit(PrintDMABuffer_HandleTypeDef *hpb) {
     RMLIB_FREE(hpb->buffer);
 }
 
-static uint8_t PushBuffer(PrintDMABuffer_HandleTypeDef* hpb, int ch) {
-    if(hpb->index < hpb->bufferSize)
+static uint8_t PushBuffer(PrintDMABuffer_HandleTypeDef *hpb, int ch) {
+    if (hpb->index < hpb->bufferSize)
         hpb->buffer[hpb->index++] = ch;
     return (hpb->index == hpb->bufferSize) ? 1 : 0;
 }
 
-HAL_StatusTypeDef PrintBufferFlush(PrintDMABuffer_HandleTypeDef* hpb) {
+HAL_StatusTypeDef PrintBufferFlush(PrintDMABuffer_HandleTypeDef *hpb) {
     uint16_t size = hpb->index;
     hpb->index = 0;
     return HAL_UART_Transmit_DMA(hpb->huart, hpb->buffer, size);
 }
 
-
+#endif

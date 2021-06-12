@@ -1,7 +1,10 @@
 #include "kalmanII.h"
-#include "arm_math.h"
 
+#if defined(ARM_MATH_CM4) || defined(ARM_MATH_CM3) || defined(ARM_MATH_CM7)
+
+#include "arm_math.h"
 static const float E_data[] = {1, 0, 0, 1};                   //!<@brief 二阶单位矩阵常量
+
 
 void kalmanII_Init(kalman_filterII_t *I) {
     arm_mat_init_f32(&I->kalman.xhat, 2, 1, (float *) I->xhat_data);
@@ -84,3 +87,5 @@ float *KalmanII_Filter(kalman_filterII_t *I, float signal1, float signal2) {
     F->filtered_value[1] = F->xhat.pData[1];
     return F->filtered_value;
 }
+
+#endif

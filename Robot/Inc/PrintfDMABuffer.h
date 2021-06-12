@@ -3,23 +3,34 @@
  * @author  yao
  * @date    8-Apr-2021
  * @brief   Printf缓冲区模块头文件
+ * @warning GCC编译器在重定向流的时候只能重定向{@code __stdout}和{@code __stderr},不能自定义流
+ *
+ *          GCC编译器使用{@code fprintf}时只能使用{@code stdout}和{@code stderr}
+ *
+ *          GCC编译器必须先添加全局宏定义(@code __CUSTOM_FILE_IO__}
+ *
+ *          使用Keil的ARMCC编译器可以使用自定义流,可以直接重定向{@code stdout}和{@code stderr}
+ *
+ *          为了兼容性,不建议Keil使用自定义流
  */
 
 #ifndef _PRINTF_DMA_BUFFER_H_
 #define _PRINTF_DMA_BUFFER_H_
 
 #include "RMLibHead.h"
+
+#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED)
+
+#if defined(__GNUC__) && !defined(__CUSTOM_FILE_IO__)
+#error "To use the GCC compiler you must add the global macro '__CUSTOM_FILE_IO__'."
+#endif
+
 #include "RMQueue.h"
-#include "stdio.h"
+#include "sys/custom_file.h"
 
 RMLIB_CPP_BEGIN
 
-/**
- * @brief 文件结构体
- */
-struct __FILE {
-    int handle;
-};
+#include "stdio.h"
 
 /**
  * @brief 缓冲区句柄结构体
@@ -67,9 +78,13 @@ HAL_StatusTypeDef PrintBufferFlush(PrintDMABuffer_HandleTypeDef* hpb);
  */
 FILE PrintBufferRedirect(PrintDMABuffer_HandleTypeDef* hpb);
 
-extern FILE __stdout; //!<@brief 标准输入流对象
-extern FILE __stderr; //!<@brief 标准输出流对象
+extern FILE __stdout; //!<@brief 标准输出流对象
+extern FILE __stderr; //!<@brief 错误输出流对象
 
 RMLIB_CPP_END
+
+#else
+#warning "Not enable UART"
+#endif
 
 #endif
