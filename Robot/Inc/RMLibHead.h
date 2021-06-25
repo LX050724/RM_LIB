@@ -36,6 +36,7 @@
  * <tr><th>虚拟串口通信模块  <td>@see VCOMCOMM.h @see VCOMCOMM.c
  * <tr><th>CRC校验模块  <td>@see CRC.h @see CRC.c
  * <tr><th>串口printf缓冲区模块  <td>@see PrintfDMABuffer.h @see PrintfDMABuffer.c
+ * <tr><th>RoboModule直流电机驱动器驱动模块  <td>@see RoboModule_DRV.h @see RoboModule_DRV.c
  * </table>
  */
 

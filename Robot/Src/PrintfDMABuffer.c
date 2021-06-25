@@ -6,9 +6,14 @@
  */
 
 #include "PrintfDMABuffer.h"
-#include <stdio.h>
 
-#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED)
+#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED) || defined(HAL_PCD_MODULE_ENABLED)
+
+#if defined(HAL_PCD_MODULE_ENABLED)
+#include "usbd_cdc_if.h"
+
+static volatile uint8_t USBTransmit_Lock = 0;
+#endif
 
 FILE __stdout = {0};
 FILE __stderr = {0};
@@ -26,25 +31,41 @@ void _sys_exit(int x) {
 }
 
 int fputc(int ch, FILE *f) {
-    if (f->handle != 0) {
+    if (f->handle != NULL) {
         RMLIB_ENTER_CRITICAL();
         PrintDMABuffer_HandleTypeDef *hpb = (PrintDMABuffer_HandleTypeDef *) f->handle;
-        if (hpb->bufferSize <= 1) {
-            HAL_UART_Transmit(hpb->huart, (uint8_t *) &ch, 1, 10);
-            RMLIB_EXIT_CRITICAL();
-        } else {
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
+        if (hpb->bufferSize == 1 && hpb->huart != NULL) {
+            HAL_UART_Transmit(hpb->huart, (uint8_t *)&ch, 1, 10);
+            return ch;
+        }
+
+        if (hpb->huart != NULL) {
 #ifdef __USE_RTOS
             if (hpb->huart->gState != HAL_UART_STATE_READY) {
                 RMLIB_EXIT_CRITICAL();
-                while (hpb->huart->gState != HAL_UART_STATE_READY);
+                while(hpb->huart->gState != HAL_UART_STATE_READY);
                 RMLIB_ENTER_CRITICAL();
             }
 #else
             while (hpb->huart->gState != HAL_UART_STATE_READY);
 #endif
-            if (PushBuffer(hpb, ch) || ch == '\n')
+            if (PushBuffer(hpb, ch) || ch == '\n') {
+                RMLIB_EXIT_CRITICAL();
                 PrintBufferFlush(hpb);
+            }
+#else
+            if (0) {
+#endif
+#if defined(HAL_PCD_MODULE_ENABLED)
+            } else {
             RMLIB_EXIT_CRITICAL();
+            volatile uint32_t count = 0xfff;
+            while (USBTransmit_Lock == 1 && count-- > 1);
+            if (PushBuffer(hpb, ch) || ch == '\n') {
+                PrintBufferFlush(hpb);
+            }
+#endif
         }
     }
     return ch;
@@ -76,7 +97,8 @@ FILE PrintBufferRedirect(PrintDMABuffer_HandleTypeDef *hpb) {
     return t;
 }
 
-RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef *hpb, UART_HandleTypeDef *huart, uint32_t bufferLen) {
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
+RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef *huart, uint32_t bufferLen) {
     if (huart == NULL) {
         /** Error: huart is Null*/
         return RM_ERROR;
@@ -100,6 +122,27 @@ RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef *hpb, UART_HandleTypeDef 
     hpb->huart = huart;
     return RM_SUCCESS;
 }
+#endif
+
+#if defined(HAL_PCD_MODULE_ENABLED)
+RM_Status PrintBufferInit_VCOM(PrintDMABuffer_HandleTypeDef* hpb) {
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
+    hpb->huart = NULL;
+#endif
+    hpb->buffer = (uint8_t *) RMLIB_MALLOC(64);
+    if (hpb->buffer == NULL) {
+        /** Error: Out of memory */
+        return RM_ERROR;
+    }
+    hpb->bufferSize = 64;
+    hpb->index = 0;
+    return RM_SUCCESS;
+}
+
+void PrintBuffer_USBTransmitCplt(void) {
+    USBTransmit_Lock = 0;
+}
+#endif
 
 void PrintBufferDeInit(PrintDMABuffer_HandleTypeDef *hpb) {
     RMLIB_FREE(hpb->buffer);
@@ -111,10 +154,30 @@ static uint8_t PushBuffer(PrintDMABuffer_HandleTypeDef *hpb, int ch) {
     return (hpb->index == hpb->bufferSize) ? 1 : 0;
 }
 
-HAL_StatusTypeDef PrintBufferFlush(PrintDMABuffer_HandleTypeDef *hpb) {
+HAL_StatusTypeDef PrintBufferFlush(PrintDMABuffer_HandleTypeDef* hpb) {
     uint16_t size = hpb->index;
     hpb->index = 0;
-    return HAL_UART_Transmit_DMA(hpb->huart, hpb->buffer, size);
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
+    if (hpb->huart != NULL)
+        return HAL_UART_Transmit_DMA(hpb->huart, hpb->buffer, size);
+#endif
+#if defined(HAL_PCD_MODULE_ENABLED)
+    extern USBD_HandleTypeDef hUsbDeviceFS;
+    if(hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED) {
+        switch (CDC_Transmit_FS(hpb->buffer, size)) {
+            case USBD_OK:
+                USBTransmit_Lock = 1;
+                return HAL_OK;
+            case USBD_BUSY:
+                USBTransmit_Lock = 0;
+                return HAL_BUSY;
+            case USBD_FAIL:
+                USBTransmit_Lock = 0;
+                return HAL_ERROR;
+        }
+    }
+#endif
+    return HAL_ERROR;
 }
 
 #endif

@@ -19,7 +19,7 @@
 
 #include "RMLibHead.h"
 
-#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED)
+#if defined(HAL_USART_MODULE_ENABLED) || defined(HAL_UART_MODULE_ENABLED) || defined(HAL_PCD_MODULE_ENABLED)
 
 #if defined(__GNUC__) && !defined(__CUSTOM_FILE_IO__)
 #error "To use the GCC compiler you must add the global macro '__CUSTOM_FILE_IO__'."
@@ -36,12 +36,16 @@ RMLIB_CPP_BEGIN
  * @brief 缓冲区句柄结构体
  */
 typedef struct {
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
     UART_HandleTypeDef *huart;     //!<@brief 串口句柄指针
+#endif
     uint16_t index;                //!<@brief 缓冲区尾部序号
     uint16_t bufferSize;           //!<@brief 缓冲区大小
     uint8_t* buffer;               //!<@brief 缓冲区指针
 } PrintDMABuffer_HandleTypeDef;
 
+
+#if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
 /**
  * @brief 初始化缓冲区句柄
  * @details 首先检查huart是否是NULL，如果是，返回错误  
@@ -55,6 +59,24 @@ typedef struct {
  * @return 是否初始化成功
  */
 RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef *huart, uint32_t bufferLen);
+#endif
+
+#if defined(HAL_PCD_MODULE_ENABLED)
+
+/**
+ * @brief 使用USB虚拟串口初始化缓冲区句柄
+ * @details 缓冲区长度固定64字节
+ *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符  
+ * @param hpb 缓冲区句柄指针
+ * @return 是否初始化成功
+ */
+RM_Status PrintBufferInit_VCOM(PrintDMABuffer_HandleTypeDef* hpb);
+
+/**
+ * @brief 通知USB发送完成，需要在CDC_TransmitCplt_FS中调用
+ */
+void PrintBuffer_USBTransmitCplt(void);
+#endif
 
 /**
  * @brief 销毁printf缓冲区
@@ -84,7 +106,7 @@ extern FILE __stderr; //!<@brief 错误输出流对象
 RMLIB_CPP_END
 
 #else
-#warning "Not enable UART"
+#warning "Not enable UART or USB"
 #endif
 
 #endif
