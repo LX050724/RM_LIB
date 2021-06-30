@@ -51,7 +51,10 @@
     #define RMLIB_CPP_END
 #endif
 
-#define RM_LIB_VERSION 20210612
+#define RM_LIB_VERSION 20210630
+
+#include <string.h>
+#include <stdlib.h>
 
 RMLIB_CPP_BEGIN
 
@@ -98,7 +101,6 @@ RMLIB_CPP_BEGIN
 
 #else //__USE_RTOS
 
-#include "stdlib.h"
 #define RMLIB_ENTER_CRITICAL()
 #define RMLIB_EXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) malloc(SIZE)
@@ -108,15 +110,12 @@ RMLIB_CPP_BEGIN
 
 #else //__UVISION_VERSION
 #include "stdint.h"
-#include "stdlib.h"
 #define RMLIB_ENTER_CRITICAL()
 #define RMLIB_EXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) malloc(SIZE)
 #define RMLIB_FREE(P) free(P)
 
 #endif //__UVISION_VERSION
-
-#include <string.h>
 
 typedef enum {
     RM_SUCCESS = 1,
