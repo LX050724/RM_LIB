@@ -51,7 +51,7 @@
     #define RMLIB_CPP_END
 #endif
 
-#define RM_LIB_VERSION 20210630
+#define RM_LIB_VERSION 20210705
 
 #include <string.h>
 #include <stdlib.h>

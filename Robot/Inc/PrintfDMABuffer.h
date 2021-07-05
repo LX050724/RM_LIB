@@ -28,6 +28,10 @@
 #include "RMQueue.h"
 #include "sys/custom_file.h"
 
+#ifdef __USE_RTOS
+#include "semphr.h"
+#endif
+
 RMLIB_CPP_BEGIN
 
 #include "stdio.h"
@@ -42,20 +46,25 @@ typedef struct {
     uint16_t index;                //!<@brief 缓冲区尾部序号
     uint16_t bufferSize;           //!<@brief 缓冲区大小
     uint8_t* buffer;               //!<@brief 缓冲区指针
+#ifdef __USE_RTOS
+    xSemaphoreHandle mutex;
+#else
+    volatile uint8_t lock;
+#endif
 } PrintDMABuffer_HandleTypeDef;
 
 
 #if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
 /**
  * @brief 初始化缓冲区句柄
- * @details 首先检查huart是否是NULL，如果是，返回错误  
- *          不是NULL继续检查缓冲区长度，详见bufferLen  
- *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符  
+ * @details 首先检查huart是否是NULL，如果是，返回错误
+ *          不是NULL继续检查缓冲区长度，详见bufferLen
+ *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符
  * @param hpb 缓冲区句柄指针
  * @param huart 重定向目的串口
- * @param bufferLen 缓冲区长度  
- *                  如果缓冲区长度 <= 1，则不使用缓冲区，直接使用串口普通发送输出，也不会检查串口有没有启用TxDMA  
- *                  如果缓冲区长度 > 1，程序会分配相应大小的缓冲区，并且会检查串口有没有启用TxDMA  
+ * @param bufferLen 缓冲区长度
+ *                  如果缓冲区长度 <= 1，则不使用缓冲区，直接使用串口普通发送输出，也不会检查串口有没有启用TxDMA
+ *                  如果缓冲区长度 > 1，程序会分配相应大小的缓冲区，并且会检查串口有没有启用TxDMA
  * @return 是否初始化成功
  */
 RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef *huart, uint32_t bufferLen);
@@ -66,14 +75,14 @@ RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef 
 /**
  * @brief 使用USB虚拟串口初始化缓冲区句柄
  * @details 缓冲区长度固定64字节
- *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符  
+ *          缓冲区自动刷新两种情况：缓冲区满、遇到换行符
  * @param hpb 缓冲区句柄指针
  * @return 是否初始化成功
  */
 RM_Status PrintBufferInit_VCOM(PrintDMABuffer_HandleTypeDef* hpb);
 
 /**
- * @brief 通知USB发送完成，需要在CDC_TransmitCplt_FS中调用
+ * @brief 通知USB发送完成，需要在CDC_TransmitCplt_FS中调用，否则USB会阻塞
  */
 void PrintBuffer_USBTransmitCplt(void);
 #endif
@@ -106,7 +115,7 @@ extern FILE __stderr; //!<@brief 错误输出流对象
 RMLIB_CPP_END
 
 #else
-#warning "Not enable UART or USB"
+#warning "Not enable UART or USB, PrintfDMABuffer is Disable"
 #endif
 
 #endif

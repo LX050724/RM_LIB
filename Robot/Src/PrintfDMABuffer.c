@@ -32,41 +32,42 @@ void _sys_exit(int x) {
 
 int fputc(int ch, FILE *f) {
     if (f->handle != NULL) {
-        RMLIB_ENTER_CRITICAL();
         PrintDMABuffer_HandleTypeDef *hpb = (PrintDMABuffer_HandleTypeDef *) f->handle;
+#ifdef __USE_RTOS
+        xSemaphoreTake(hpb->mutex, portMAX_DELAY);
+#else
+        while(hpb->lock == 1);
+        hpb->lock = 1;
+#endif
 #if defined(HAL_UART_MODULE_ENABLED) || defined(HAL_USART_MODULE_ENABLED)
         if (hpb->bufferSize == 1 && hpb->huart != NULL) {
             HAL_UART_Transmit(hpb->huart, (uint8_t *)&ch, 1, 10);
-            return ch;
+            goto End;
         }
 
         if (hpb->huart != NULL) {
-#ifdef __USE_RTOS
-            if (hpb->huart->gState != HAL_UART_STATE_READY) {
-                RMLIB_EXIT_CRITICAL();
-                while(hpb->huart->gState != HAL_UART_STATE_READY);
-                RMLIB_ENTER_CRITICAL();
-            }
-#else
             while (hpb->huart->gState != HAL_UART_STATE_READY);
-#endif
             if (PushBuffer(hpb, ch) || ch == '\n') {
-                RMLIB_EXIT_CRITICAL();
                 PrintBufferFlush(hpb);
             }
 #else
-            if (0) {
+        if (0) {
 #endif
 #if defined(HAL_PCD_MODULE_ENABLED)
-            } else {
-            RMLIB_EXIT_CRITICAL();
-            volatile uint32_t count = 0xfff;
+        } else {
+            volatile uint32_t count = 0x00000FFF;
             while (USBTransmit_Lock == 1 && count-- > 1);
             if (PushBuffer(hpb, ch) || ch == '\n') {
                 PrintBufferFlush(hpb);
             }
 #endif
         }
+End:
+#ifdef __USE_RTOS
+        xSemaphoreGive(hpb->mutex);
+#else
+        hpb->lock = 0;
+#endif
     }
     return ch;
 }
@@ -120,6 +121,11 @@ RM_Status PrintBufferInit(PrintDMABuffer_HandleTypeDef* hpb, UART_HandleTypeDef 
     }
     hpb->index = 0;
     hpb->huart = huart;
+#ifdef __USE_RTOS
+    hpb->mutex = xSemaphoreCreateMutex();
+#else
+    hpb->lock = 0;
+#endif
     return RM_SUCCESS;
 }
 #endif
@@ -136,6 +142,11 @@ RM_Status PrintBufferInit_VCOM(PrintDMABuffer_HandleTypeDef* hpb) {
     }
     hpb->bufferSize = 64;
     hpb->index = 0;
+#ifdef __USE_RTOS
+    hpb->mutex = xSemaphoreCreateMutex();
+#else
+    hpb->lock = 0;
+#endif
     return RM_SUCCESS;
 }
 

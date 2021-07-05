@@ -164,7 +164,7 @@ void CAN_RoboModule_DRV_Send(CAN_HandleTypeDef *hcan, RoboModule_Typedef *rmt) {
 }
 
 uint8_t CAN_RoboModule_DRV_PositionArrive(RoboModule_Typedef *rmt, uint8_t error) {
-    return abs((int)rmt->ExpPosition - (int)rmt->Position) < error ? 1 : 0;
+    return abs(rmt->ExpPosition - rmt->Position) < error ? 1 : 0;
 }
 
 #endif
