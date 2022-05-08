@@ -8,13 +8,13 @@
 #include "Chassis.h"
 
 
-void ChassisMotorSpeedClean(ChassisSpeed_Ref_t *ref) {
+void ChassisMotorSpeed_clean(ChassisSpeed_Ref_t *ref) {
     ref->forward_back_ref = 0;
     ref->left_right_ref = 0;
     ref->rotate_ref = 0;
 }
 
-__weak void PID_Expect(Chassis_Motor_Speed *motor, ChassisSpeed_Ref_t *ref) {
+__weak void ChassisMotorSpeed_get(Chassis_Motor_Speed *motor, ChassisSpeed_Ref_t *ref) {
     motor->speed_3 = -ref->forward_back_ref -
                      ref->left_right_ref + ref->rotate_ref;
 

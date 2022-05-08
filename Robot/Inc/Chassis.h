@@ -43,14 +43,14 @@ typedef struct {
  * @brief 将预期的速度矢量清零
  * @param[out] ref 矢量速度结构体
  */
-void ChassisMotorSpeedClean(ChassisSpeed_Ref_t *ref);
+void ChassisMotorSpeed_clean(ChassisSpeed_Ref_t *ref);
 
 /**
- * @brief 由速度矢量计算电机速度，该函数是弱函数，可以重新以适应不同的底盘
+ * @brief 由速度矢量计算电机速度，该函数是弱函数，可以重写以适应不同的底盘
  * @param[out] motor 轮组速度结构体
  * @param[in] ref 矢量速度结构体
  */
-__weak void PID_Expect(Chassis_Motor_Speed *motor, ChassisSpeed_Ref_t *ref);
+void ChassisMotorSpeed_get(Chassis_Motor_Speed *motor, ChassisSpeed_Ref_t *ref);
 
 RMLIB_CPP_END
 

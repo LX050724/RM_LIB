@@ -15,10 +15,10 @@
  * <h2><a href="http://www.kdrobot.top/git/KDRobot_RM/RM_LIB">Git页面</a></h2>
  *
  * 注意使用的HAL库的版本大于1.19.0,推荐1.24.x
+ * Version: 20220508
  *
  * ## 配置方法
  *
- * 添加全局宏定义`__USE_RTOS`决定是否使用FreeRTOS的标志决定了CAN是否使用临界区保护以及巴特沃斯滤波器动态内存分配使用的函数</p>
  * 添加全局宏定义`WatchDoglength`，并赋值看门狗最大数量启用看门狗</p>
  *
  * <table>
@@ -44,69 +44,70 @@
 #define _RMLIBHEAD_H
 
 #ifdef __cplusplus
-    #define RMLIB_CPP_BEGIN extern "C" {
-    #define RMLIB_CPP_END }
+#define RMLIB_CPP_BEGIN extern "C" {
+#define RMLIB_CPP_END }
 #else
-    #define RMLIB_CPP_BEGIN
-    #define RMLIB_CPP_END
+#define RMLIB_CPP_BEGIN
+#define RMLIB_CPP_END
 #endif
 
-#define RM_LIB_VERSION 20210705
+#define RM_LIB_VERSION 20220508
 
 #include <string.h>
 #include <stdlib.h>
 
 RMLIB_CPP_BEGIN
 
+#ifndef __has_include
+#error "The compiler does not support '__has_include'"
+#endif
+
 #if defined(__ARMCC_VERSION) || defined(__GNUC__)
-#if defined(STM32F405xx) || defined(STM32F415xx) || defined(STM32F407xx) || defined(STM32F417xx) || \
-    defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx) || \
-    defined(STM32F401xC) || defined(STM32F401xE) || defined(STM32F410Tx) || defined(STM32F410Cx) || \
-    defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F469xx) || \
-    defined(STM32F479xx) || defined(STM32F412Cx) || defined(STM32F412Zx) || defined(STM32F412Rx) || \
-    defined(STM32F412Vx) || defined(STM32F413xx) || defined(STM32F423xx)
-#include <stm32f4xx.h>
-#elif defined(STM32F030x6)|| defined(STM32F030x8)|| defined(STM32F031x6)|| defined(STM32F038xx)|| \
-      defined(STM32F042x6)|| defined(STM32F048xx)|| defined(STM32F051x8)|| defined(STM32F058xx)|| \
-      defined(STM32F070x6)|| defined(STM32F070xB)|| defined(STM32F071xB)|| defined(STM32F072xB)|| \
-      defined(STM32F078xx)|| defined(STM32F091xC)|| defined(STM32F098xx)|| defined(STM32F030xC)
+
+#if __has_include("stm32f0xx.h")
 #include <stm32f0xx.h>
-#elif defined(STM32F100xB) || defined(STM32F100xE) || defined(STM32F101x6) || defined(STM32F101xB) || \
-      defined(STM32F101xE) || defined(STM32F101xG) || defined(STM32F102x6) || defined(STM32F102xB) || \
-      defined(STM32F103x6) || defined(STM32F103xB) || defined(STM32F103xE) || defined(STM32F103xG) || \
-      defined(STM32F105xC) || defined(STM32F107xC)
+#elif __has_include("stm32f1xx.h")
 #include <stm32f1xx.h>
-#elif defined(STM32F301x8) || defined(STM32F302x8) || defined(STM32F302xC) || defined(STM32F302xE) || \
-      defined(STM32F303x8) || defined(STM32F303xC) || defined(STM32F303xE) || defined(STM32F373xC) || \
-      defined(STM32F334x8) || defined(STM32F318xx) || defined(STM32F328xx) || defined(STM32F358xx) || \
-      defined(STM32F378xx) || defined(STM32F398xx)
+#elif __has_include("stm32f2xx.h")
+#include <stm32f2xx.h>
+#elif __has_include("stm32f3xx.h")
 #include <stm32f3xx.h>
-#elif defined(STM32H743xx) || defined(STM32H753xx) || defined(STM32H750xx) || defined(STM32H742xx) || \
-      defined(STM32H745xx) || defined(STM32H755xx) || defined(STM32H747xx) || defined(STM32H757xx) || \
-      defined(STM32H7B0xx) || defined(STM32H7B0xxQ)|| defined(STM32H7A3xx) || defined(STM32H7B3xx) || \
-      defined(STM32H7A3xxQ)|| defined(STM32H7B3xxQ)|| defined(STM32H735xx) || defined(STM32H733xx) || \
-      defined(STM32H730xx) || defined(STM32H730xxQ)|| defined(STM32H725xx) || defined(STM32H723xx)
+#elif __has_include("stm32f4xx.h")
+#include <stm32f4xx.h>
+#elif __has_include("stm32f7xx.h")
+#include <stm32f7xx.h>
+#elif __has_include("stm32g0xx.h")
+#include <stm32g0xx.h>
+#elif __has_include("stm32g4xx.h")
+#include <stm32g4xx.h>
+#elif __has_include("stm32h7xx.h")
 #include <stm32h7xx.h>
 #endif
 
+#if __has_include("FreeRTOS.h")
 #ifdef __USE_RTOS
-
+#undef __USE_RTOS
+#endif
+#define __USE_RTOS 1
 #include "FreeRTOS.h"
-#include "cmsis_os.h"
 #include "task.h"
+
+#if __has_include("cmsis_os2.h")
+#include "cmsis_os2.h"
+#else
+#include "cmsis_os.h"
+#endif
+
 #define RMLIB_ENTER_CRITICAL() vPortEnterCritical()
 #define RMLIB_EXIT_CRITICAL() vPortExitCritical()
 #define RMLIB_MALLOC(SIZE) pvPortMalloc(SIZE)
 #define RMLIB_FREE(P) vPortFree(P)
-
-#else //__USE_RTOS
-
+#else
 #define RMLIB_ENTER_CRITICAL()
 #define RMLIB_EXIT_CRITICAL()
 #define RMLIB_MALLOC(SIZE) malloc(SIZE)
 #define RMLIB_FREE(P) free(P)
-
-#endif //__USE_RTOS
+#endif
 
 #else //__UVISION_VERSION
 #include "stdint.h"

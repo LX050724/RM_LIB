@@ -19,10 +19,6 @@ RMLIB_CPP_BEGIN
 
 #include "can.h"
 
-#if !defined(CAN1) && defined(CAN)
-#define CAN1 CAN
-#endif
-
 extern uint8_t CAN1_buff[8];        //!<@brief CAN1接收缓冲区
 
 #if defined(CAN2)

@@ -31,7 +31,7 @@ void _sys_exit(int x) {
 }
 
 int fputc(int ch, FILE *f) {
-    if (f->handle != NULL) {
+    if ((void *)f->handle != NULL) {
         PrintDMABuffer_HandleTypeDef *hpb = (PrintDMABuffer_HandleTypeDef *) f->handle;
 #ifdef __USE_RTOS
         xSemaphoreTake(hpb->mutex, portMAX_DELAY);

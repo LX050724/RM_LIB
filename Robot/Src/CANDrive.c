@@ -2,6 +2,10 @@
 
 #ifdef HAL_CAN_MODULE_ENABLED
 
+#if !defined(CAN1) && defined(CAN)
+#define CAN1 CAN
+#endif
+
 uint8_t CAN1_buff[8];
 
 #if defined(CAN2)
